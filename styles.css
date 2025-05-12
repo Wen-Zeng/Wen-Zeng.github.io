@@ -332,7 +332,12 @@ footer {
 .job {
     margin-bottom: 2rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: none;
+}
+
+.job:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .job h3 {
@@ -415,6 +420,9 @@ footer {
 .section-block {
     margin-bottom: 3rem;
     padding-bottom: 2rem;
+}
+
+.experience-section {
     border-bottom: 1px solid #eee;
 }
 
