@@ -54,25 +54,23 @@
     <script>
       async function fetchBlogPosts() {
         const query = `
-                query GetPosts {
+                query {
                     publication(host: "wen-zeng.hashnode.dev") {
-                        posts(first: 100, sortBy: PUBLISHED_AT) {
+                        isTeam
+                        title
+                        posts(first: 10) {
                             edges {
                                 node {
+                                    id
                                     title
                                     brief
-                                    url
+                                    slug
+                                    publishedAt
                                     coverImage {
                                         url
                                     }
-                                    publishedAt
                                 }
                             }
-                            pageInfo {
-                                hasNextPage
-                                endCursor
-                            }
-                            totalDocuments
                         }
                     }
                 }
@@ -83,8 +81,6 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Accept: "application/json",
-              "Cache-Control": "no-cache",
             },
             body: JSON.stringify({ query }),
           });
@@ -96,17 +92,8 @@
 
           if (data.data?.publication?.posts?.edges) {
             const posts = data.data.publication.posts.edges;
-            const totalPosts = data.data.publication.posts.totalDocuments;
-            console.log("Total posts:", totalPosts);
-            console.log("Posts fetched:", posts.length);
 
             if (posts.length > 0) {
-              // Sort posts by date (newest first)
-              posts.sort(
-                (a, b) =>
-                  new Date(b.node.publishedAt) - new Date(a.node.publishedAt)
-              );
-
               blogPostsContainer.innerHTML = posts
                 .map(
                   ({ node: post }) => `
@@ -128,8 +115,8 @@
                                     <p class="post-brief">${
                                       post.brief || ""
                                     }</p>
-                                    <a href="${
-                                      post.url
+                                    <a href="https://wen-zeng.hashnode.dev/${
+                                      post.slug
                                     }" target="_blank" class="read-more">Read More</a>
                                 </div>
                             </article>
@@ -163,9 +150,6 @@
 
       // Load posts when the page loads
       fetchBlogPosts();
-
-      // Refresh posts every 5 minutes
-      setInterval(fetchBlogPosts, 300000);
     </script>
   </body>
 </html>
