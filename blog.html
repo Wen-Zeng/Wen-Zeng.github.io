@@ -30,15 +30,11 @@
     <main>
       <section class="section-blog">
         <div class="blog-container">
-          <h1>My Blog</h1>
-          <p>Read my latest thoughts and insights on my Hashnode blog.</p>
-          <a
-            href="https://hashnode.com/@Wen-Zeng"
-            class="blog-button"
-            target="_blank"
-          >
-            Visit My Blog
-          </a>
+          <h1>My Blog Posts</h1>
+          <div id="blog-posts" class="blog-posts-grid">
+            <!-- Posts will be loaded here -->
+            <div class="loading">Loading posts...</div>
+          </div>
         </div>
       </section>
     </main>
@@ -46,6 +42,93 @@
     <footer>
       <p>&copy; 2024 Wen ZENG. All rights reserved.</p>
     </footer>
+
+    <script>
+      async function fetchBlogPosts() {
+        const query = `
+          query {
+            user(username: "Wen-Zeng") {
+              publication {
+                posts(page: 1) {
+                  title
+                  brief
+                  slug
+                  dateAdded
+                  coverImage
+                }
+              }
+            }
+          }
+        `;
+
+        try {
+          const response = await fetch("https://api.hashnode.com/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query }),
+          });
+
+          const data = await response.json();
+          const posts = data.data.user.publication.posts;
+          const blogPostsContainer = document.getElementById("blog-posts");
+          blogPostsContainer.innerHTML = ""; // Clear loading message
+
+          if (posts && posts.length > 0) {
+            posts.forEach((post) => {
+              const date = new Date(post.dateAdded).toLocaleDateString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              );
+
+              const postElement = `
+                <article class="blog-post-card">
+                  ${
+                    post.coverImage
+                      ? `<img src="${post.coverImage}" alt="${post.title}" class="post-cover">`
+                      : ""
+                  }
+                  <div class="post-content">
+                    <h2>${post.title}</h2>
+                    <div class="post-date">${date}</div>
+                    <p class="post-brief">${post.brief}</p>
+                    <a href="https://hashnode.com/@Wen-Zeng/${
+                      post.slug
+                    }" target="_blank" class="read-more">Read More</a>
+                  </div>
+                </article>
+              `;
+              blogPostsContainer.innerHTML += postElement;
+            });
+          } else {
+            blogPostsContainer.innerHTML = `
+              <div class="no-posts">
+                <p>No blog posts found. Check out my blog directly on 
+                  <a href="https://hashnode.com/@Wen-Zeng" target="_blank">Hashnode</a>
+                </p>
+              </div>
+            `;
+          }
+        } catch (error) {
+          console.error("Error fetching blog posts:", error);
+          document.getElementById("blog-posts").innerHTML = `
+            <div class="error-message">
+              <p>Unable to load blog posts. Please visit my blog directly on 
+                <a href="https://hashnode.com/@Wen-Zeng" target="_blank">Hashnode</a>
+              </p>
+            </div>
+          `;
+        }
+      }
+
+      // Load posts when the page loads
+      fetchBlogPosts();
+    </script>
     <script src="script.js"></script>
   </body>
 </html>
