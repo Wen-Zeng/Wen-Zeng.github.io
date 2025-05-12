@@ -31,6 +31,14 @@
       <section class="section-blog">
         <div class="blog-container">
           <h1>My Blog Posts</h1>
+          <div class="blog-header">
+            <p>
+              Read my latest posts on my
+              <a href="https://wen-zeng.hashnode.dev" target="_blank"
+                >Hashnode blog</a
+              >
+            </p>
+          </div>
           <div id="blog-posts" class="blog-posts-grid">
             <!-- Posts will be loaded here -->
             <div class="loading">Loading posts...</div>
@@ -46,19 +54,18 @@
     <script>
       async function fetchBlogPosts() {
         const query = `
-                query {
+                query GetPosts {
                     publication(host: "wen-zeng.hashnode.dev") {
-                        posts(first: 10) {
+                        posts(first: 20) {
                             edges {
                                 node {
                                     title
                                     brief
-                                    slug
-                                    publishedAt
+                                    url
                                     coverImage {
                                         url
                                     }
-                                    url
+                                    publishedAt
                                 }
                             }
                         }
@@ -76,75 +83,62 @@
           });
 
           const data = await response.json();
-          console.log("Full API Response:", data); // More detailed logging
+          console.log("API Response:", data);
 
           const blogPostsContainer = document.getElementById("blog-posts");
 
-          // Check if we have a publication
-          if (!data.data || !data.data.publication) {
-            blogPostsContainer.innerHTML = `
-                        <div class="no-posts">
-                            <p>Please finish setting up your Hashnode blog to see your posts here.</p>
-                            <p>Steps to complete setup:</p>
-                            <ol>
-                                <li>Go to <a href="https://hashnode.com/onboard" target="_blank">Hashnode Onboarding</a></li>
-                                <li>Set up your blog/publication</li>
-                                <li>Write your first post</li>
-                            </ol>
-                            <p>Or visit my profile directly on 
-                                <a href="https://hashnode.com/@Wen-Zeng" target="_blank">Hashnode</a>
-                            </p>
-                        </div>
-                    `;
-            return;
-          }
+          if (data.data?.publication?.posts?.edges) {
+            const posts = data.data.publication.posts.edges;
 
-          const posts = data.data.publication.posts.edges;
-
-          if (posts && posts.length > 0) {
-            blogPostsContainer.innerHTML = posts
-              .map(
-                ({ node: post }) => `
-                        <article class="blog-post-card">
-                            ${
-                              post.coverImage
-                                ? `<img src="${post.coverImage.url}" alt="${post.title}" class="post-cover">`
-                                : ""
-                            }
-                            <div class="post-content">
-                                <h2>${post.title}</h2>
-                                <div class="post-date">${new Date(
-                                  post.publishedAt
-                                ).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                })}</div>
-                                <p class="post-brief">${post.brief || ""}</p>
-                                <a href="${
-                                  post.url
-                                }" target="_blank" class="read-more">Read More</a>
+            if (posts.length > 0) {
+              blogPostsContainer.innerHTML = posts
+                .map(
+                  ({ node: post }) => `
+                            <article class="blog-post-card">
+                                ${
+                                  post.coverImage
+                                    ? `<img src="${post.coverImage.url}" alt="${post.title}" class="post-cover">`
+                                    : ""
+                                }
+                                <div class="post-content">
+                                    <h2>${post.title}</h2>
+                                    <div class="post-date">${new Date(
+                                      post.publishedAt
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    })}</div>
+                                    <p class="post-brief">${
+                                      post.brief || ""
+                                    }</p>
+                                    <a href="${
+                                      post.url
+                                    }" target="_blank" class="read-more">Read More</a>
+                                </div>
+                            </article>
+                        `
+                )
+                .join("");
+            } else {
+              blogPostsContainer.innerHTML = `
+                            <div class="no-posts">
+                                <p>No blog posts found yet. Visit my blog on 
+                                    <a href="https://wen-zeng.hashnode.dev" target="_blank">Hashnode</a>
+                                    to read future posts!
+                                </p>
                             </div>
-                        </article>
-                    `
-              )
-              .join("");
+                        `;
+            }
           } else {
-            blogPostsContainer.innerHTML = `
-                        <div class="no-posts">
-                            <p>No blog posts found yet. Start writing on 
-                                <a href="https://hashnode.com/write" target="_blank">Hashnode</a>
-                                to see your posts here!
-                            </p>
-                        </div>
-                    `;
+            throw new Error("Unable to fetch blog posts");
           }
         } catch (error) {
-          console.error("Error details:", error); // More detailed error logging
+          console.error("Error details:", error);
           document.getElementById("blog-posts").innerHTML = `
-                    <div class="error-message">
-                        <p>Unable to load blog posts. Please try again later or visit my blog directly on 
-                            <a href="https://hashnode.com/@Wen-Zeng" target="_blank">Hashnode</a>
+                    <div class="blog-redirect">
+                        <p>Visit my blog directly at: 
+                            <a href="https://wen-zeng.hashnode.dev" target="_blank">wen-zeng.hashnode.dev</a>
                         </p>
                     </div>
                 `;
