@@ -58,7 +58,7 @@
                     publication(host: "wen-zeng.hashnode.dev") {
                         isTeam
                         title
-                        posts(first: 10) {
+                        posts(first: 50) {
                             edges {
                                 node {
                                     id
@@ -81,9 +81,15 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              Pragma: "no-cache",
+              Expires: "0",
             },
             body: JSON.stringify({ query }),
           });
+
+          // Clear browser cache for this page
+          window.location.reload(true);
 
           const data = await response.json();
           console.log("API Response:", data);
@@ -94,6 +100,12 @@
             const posts = data.data.publication.posts.edges;
 
             if (posts.length > 0) {
+              // Sort posts by date (newest first)
+              posts.sort(
+                (a, b) =>
+                  new Date(b.node.publishedAt) - new Date(a.node.publishedAt)
+              );
+
               blogPostsContainer.innerHTML = posts
                 .map(
                   ({ node: post }) => `
@@ -150,6 +162,31 @@
 
       // Load posts when the page loads
       fetchBlogPosts();
+
+      // Add a refresh button
+      const blogHeader = document.querySelector(".blog-header");
+      const refreshButton = document.createElement("button");
+      refreshButton.textContent = "Refresh Posts";
+      refreshButton.className = "refresh-button";
+      refreshButton.onclick = fetchBlogPosts;
+      blogHeader.appendChild(refreshButton);
     </script>
+
+    <style>
+      .refresh-button {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .refresh-button:hover {
+        background-color: #555;
+      }
+    </style>
   </body>
 </html>
