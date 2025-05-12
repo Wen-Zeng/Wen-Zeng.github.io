@@ -497,3 +497,7 @@ footer {
     color: #333;
     margin-right: 0.5rem;
 }
+
+.no-top-border {
+    border-top: none !important;
+}
