@@ -56,7 +56,7 @@
         const query = `
                 query GetPosts {
                     publication(host: "wen-zeng.hashnode.dev") {
-                        posts(first: 20) {
+                        posts(first: 50) {
                             edges {
                                 node {
                                     title
@@ -68,6 +68,11 @@
                                     publishedAt
                                 }
                             }
+                            pageInfo {
+                                hasNextPage
+                                endCursor
+                            }
+                            totalDocuments
                         }
                     }
                 }
@@ -78,6 +83,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Accept: "application/json",
             },
             body: JSON.stringify({ query }),
           });
@@ -89,6 +95,9 @@
 
           if (data.data?.publication?.posts?.edges) {
             const posts = data.data.publication.posts.edges;
+            const totalPosts = data.data.publication.posts.totalDocuments;
+            console.log("Total posts:", totalPosts);
+            console.log("Posts fetched:", posts.length);
 
             if (posts.length > 0) {
               blogPostsContainer.innerHTML = posts
