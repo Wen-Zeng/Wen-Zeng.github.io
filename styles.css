@@ -509,3 +509,21 @@ footer {
 .no-top-border {
     border-top: none !important;
 }
+
+.reviewer-list {
+    list-style: none;
+    padding-left: 1.5rem;
+}
+
+.reviewer-list li {
+    margin-bottom: 0.5rem;
+    position: relative;
+    line-height: 1.6;
+}
+
+.reviewer-list li:before {
+    content: "•";
+    position: absolute;
+    left: -1.5rem;
+    color: #666;
+}
