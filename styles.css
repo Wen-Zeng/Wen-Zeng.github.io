@@ -312,14 +312,35 @@ footer {
 }
 
 .contact-info {
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
 }
 
-.contact-info i {
-    margin-right: 0.5rem;
+.contact-items-container {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contact-item i {
+    color: #666;
+}
+
+.contact-item p {
+    margin: 0;
+}
+
+.contact-item strong {
+    color: #333;
+    font-weight: 600;
 }
 
 .professional-summary {
