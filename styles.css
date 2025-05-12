@@ -405,3 +405,63 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section-block {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.section-block h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #333;
+}
+
+.skills-list h3 {
+    color: #444;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.skills-list ul {
+    list-style: none;
+    padding-left: 1.5rem;
+}
+
+.skills-list li {
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.skills-list li:before {
+    content: "▹";
+    position: absolute;
+    left: -1.5rem;
+    color: #666;
+}
+
+.publication-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.publication-list li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+}
+
+.publication-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #666;
+}
