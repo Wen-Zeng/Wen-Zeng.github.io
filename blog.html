@@ -46,15 +46,18 @@
     <script>
       async function fetchBlogPosts() {
         const query = `
-          query {
-            user(username: "Wen-Zeng") {
-              publication {
-                posts(page: 1) {
-                  title
-                  brief
-                  slug
-                  dateAdded
-                  coverImage
+          query GetUserArticles {
+            publication(id: "6821f7d19eaad7d7e4bac4a2") {
+              posts(first: 10) {
+                edges {
+                  node {
+                    title
+                    brief
+                    slug
+                    dateAdded
+                    coverImage
+                    url
+                  }
                 }
               }
             }
@@ -71,12 +74,12 @@
           });
 
           const data = await response.json();
-          const posts = data.data.user.publication.posts;
+          const posts = data.data.publication.posts.edges;
           const blogPostsContainer = document.getElementById("blog-posts");
           blogPostsContainer.innerHTML = ""; // Clear loading message
 
           if (posts && posts.length > 0) {
-            posts.forEach((post) => {
+            posts.forEach(({ node: post }) => {
               const date = new Date(post.dateAdded).toLocaleDateString(
                 "en-US",
                 {
@@ -96,9 +99,9 @@
                   <div class="post-content">
                     <h2>${post.title}</h2>
                     <div class="post-date">${date}</div>
-                    <p class="post-brief">${post.brief}</p>
-                    <a href="https://hashnode.com/@Wen-Zeng/${
-                      post.slug
+                    <p class="post-brief">${post.brief || ""}</p>
+                    <a href="${
+                      post.url
                     }" target="_blank" class="read-more">Read More</a>
                   </div>
                 </article>
@@ -108,8 +111,9 @@
           } else {
             blogPostsContainer.innerHTML = `
               <div class="no-posts">
-                <p>No blog posts found. Check out my blog directly on 
-                  <a href="https://hashnode.com/@Wen-Zeng" target="_blank">Hashnode</a>
+                <p>No blog posts found yet. Start writing on 
+                  <a href="https://hashnode.com/write" target="_blank">Hashnode</a>
+                  to see your posts here!
                 </p>
               </div>
             `;
@@ -118,7 +122,7 @@
           console.error("Error fetching blog posts:", error);
           document.getElementById("blog-posts").innerHTML = `
             <div class="error-message">
-              <p>Unable to load blog posts. Please visit my blog directly on 
+              <p>Unable to load blog posts. Please try again later or visit my blog directly on 
                 <a href="https://hashnode.com/@Wen-Zeng" target="_blank">Hashnode</a>
               </p>
             </div>
