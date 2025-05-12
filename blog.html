@@ -56,7 +56,7 @@
         const query = `
                 query GetPosts {
                     publication(host: "wen-zeng.hashnode.dev") {
-                        posts(first: 50) {
+                        posts(first: 100, sortBy: PUBLISHED_AT) {
                             edges {
                                 node {
                                     title
@@ -84,6 +84,7 @@
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
+              "Cache-Control": "no-cache",
             },
             body: JSON.stringify({ query }),
           });
@@ -100,6 +101,12 @@
             console.log("Posts fetched:", posts.length);
 
             if (posts.length > 0) {
+              // Sort posts by date (newest first)
+              posts.sort(
+                (a, b) =>
+                  new Date(b.node.publishedAt) - new Date(a.node.publishedAt)
+              );
+
               blogPostsContainer.innerHTML = posts
                 .map(
                   ({ node: post }) => `
@@ -156,6 +163,9 @@
 
       // Load posts when the page loads
       fetchBlogPosts();
+
+      // Refresh posts every 5 minutes
+      setInterval(fetchBlogPosts, 300000);
     </script>
   </body>
 </html>
