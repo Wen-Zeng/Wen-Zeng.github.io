@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transport GIS - Your Name</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <style>
+      #map {
+        height: 600px;
+        width: 100%;
+        margin: 20px 0;
+      }
+      .layer-control {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      .layer-control label {
+        display: block;
+        margin: 5px 0;
+      }
+      .map-popup {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="transport-gis.html">Transport GIS</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h1>Transport GIS</h1>
+      <p>
+        Interactive map showing the development of China's transport networks
+        over time.
+      </p>
+
+      <div class="layer-control">
+        <h3>Layer Controls</h3>
+        <label>
+          <input type="checkbox" id="highSpeedRailway" checked /> High-Speed
+          Railway
+        </label>
+        <label>
+          <input type="checkbox" id="regularRailway" checked /> Regular Railway
+        </label>
+        <label>
+          <input type="checkbox" id="railwayStation" checked /> Railway Station
+        </label>
+        <label>
+          <input type="checkbox" id="motorway" checked /> Motorway
+        </label>
+        <label> <input type="checkbox" id="highway" checked /> Highway </label>
+        <label>
+          <input type="checkbox" id="waterway" checked /> Waterway
+        </label>
+      </div>
+
+      <div id="map"></div>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      // Initialize the map
+      const map = L.map("map").setView([35.8617, 104.1954], 4);
+
+      // Add OpenStreetMap base layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Create layer groups for each transport type
+      const highSpeedRailwayLayer = L.layerGroup().addTo(map);
+      const regularRailwayLayer = L.layerGroup().addTo(map);
+      const railwayStationLayer = L.layerGroup().addTo(map);
+      const motorwayLayer = L.layerGroup().addTo(map);
+      const highwayLayer = L.layerGroup().addTo(map);
+      const waterwayLayer = L.layerGroup().addTo(map);
+
+      // Function to load GeoJSON data using our backend
+      async function loadGeoJSON(path, layer, style) {
+        try {
+          console.log("Loading:", path);
+          const response = await fetch(
+            `https://transport-gis-backend.onrender.com/api/geojson/${encodeURIComponent(
+              path
+            )}`
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          const content = atob(data.content); // Decode base64 content
+          const geoJSON = JSON.parse(content);
+
+          L.geoJSON(geoJSON, {
+            style: style,
+            onEachFeature: function (feature, layer) {
+              if (feature.properties) {
+                layer.bindPopup(
+                  Object.entries(feature.properties)
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join("<br>")
+                );
+              }
+            },
+          }).addTo(layer);
+          console.log("Successfully loaded:", path);
+        } catch (error) {
+          console.error("Error loading GeoJSON:", error);
+          console.error("Path:", path);
+        }
+      }
+
+      // Load data for each layer
+      loadGeoJSON(
+        "Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
+        highSpeedRailwayLayer,
+        { color: "red", weight: 2 }
+      );
+
+      loadGeoJSON(
+        "Data/RegularRailway/RegularRailway2020.geojson",
+        regularRailwayLayer,
+        { color: "orange", weight: 2 }
+      );
+
+      loadGeoJSON(
+        "Data/RailwayStation/RailwayStation2020.geojson",
+        railwayStationLayer,
+        {
+          radius: 5,
+          fillColor: "red",
+          color: "white",
+          weight: 2,
+          fillOpacity: 1,
+        }
+      );
+
+      loadGeoJSON("Data/Motorway/Motorway2020.geojson", motorwayLayer, {
+        color: "blue",
+        weight: 2,
+      });
+
+      loadGeoJSON("Data/Highway/Highway2020.geojson", highwayLayer, {
+        color: "green",
+        weight: 2,
+      });
+
+      loadGeoJSON("Data/Waterway/Waterway2020.geojson", waterwayLayer, {
+        color: "cyan",
+        weight: 2,
+      });
+
+      // Layer control functionality
+      document
+        .getElementById("highSpeedRailway")
+        .addEventListener("change", function (e) {
+          if (e.target.checked) {
+            map.addLayer(highSpeedRailwayLayer);
+          } else {
+            map.removeLayer(highSpeedRailwayLayer);
+          }
+        });
+
+      document
+        .getElementById("regularRailway")
+        .addEventListener("change", function (e) {
+          if (e.target.checked) {
+            map.addLayer(regularRailwayLayer);
+          } else {
+            map.removeLayer(regularRailwayLayer);
+          }
+        });
+
+      document
+        .getElementById("railwayStation")
+        .addEventListener("change", function (e) {
+          if (e.target.checked) {
+            map.addLayer(railwayStationLayer);
+          } else {
+            map.removeLayer(railwayStationLayer);
+          }
+        });
+
+      document
+        .getElementById("motorway")
+        .addEventListener("change", function (e) {
+          if (e.target.checked) {
+            map.addLayer(motorwayLayer);
+          } else {
+            map.removeLayer(motorwayLayer);
+          }
+        });
+
+      document
+        .getElementById("highway")
+        .addEventListener("change", function (e) {
+          if (e.target.checked) {
+            map.addLayer(highwayLayer);
+          } else {
+            map.removeLayer(highwayLayer);
+          }
+        });
+
+      document
+        .getElementById("waterway")
+        .addEventListener("change", function (e) {
+          if (e.target.checked) {
+            map.addLayer(waterwayLayer);
+          } else {
+            map.removeLayer(waterwayLayer);
+          }
+        });
+    </script>
+  </body>
+</html>
