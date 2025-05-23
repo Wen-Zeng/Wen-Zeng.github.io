@@ -180,13 +180,32 @@
       // Initialize map and load layers
       document.addEventListener("DOMContentLoaded", async () => {
         try {
-          // Load all layers
+          // Load High-Speed Railway first
+          await loadGeoJSON(
+            "Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
+            highSpeedRailwayLayer,
+            { color: "red", weight: 2 }
+          );
+
+          // Add High-Speed Railway layer to the map
+          highSpeedRailwayLayer.addTo(map);
+
+          // Update the layer control to show High-Speed Railway as checked
+          const layerControlContainer = document.querySelector(
+            ".leaflet-control-layers-list"
+          );
+          if (layerControlContainer) {
+            const checkboxes = layerControlContainer.querySelectorAll(
+              'input[type="checkbox"]'
+            );
+            checkboxes.forEach((checkbox, index) => {
+              // First checkbox is High-Speed Railway
+              checkbox.checked = index === 0;
+            });
+          }
+
+          // Load other layers in the background
           await Promise.all([
-            loadGeoJSON(
-              "Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
-              highSpeedRailwayLayer,
-              { color: "red", weight: 2 }
-            ),
             loadGeoJSON(
               "Data/RegularRailway/RegularRailway2020.geojson",
               regularRailwayLayer,
@@ -216,23 +235,6 @@
               weight: 2,
             }),
           ]);
-
-          // Add High-Speed Railway layer to the map
-          highSpeedRailwayLayer.addTo(map);
-
-          // Update the layer control to show High-Speed Railway as checked
-          const layerControlContainer = document.querySelector(
-            ".leaflet-control-layers-list"
-          );
-          if (layerControlContainer) {
-            const checkboxes = layerControlContainer.querySelectorAll(
-              'input[type="checkbox"]'
-            );
-            checkboxes.forEach((checkbox, index) => {
-              // First checkbox is High-Speed Railway
-              checkbox.checked = index === 0;
-            });
-          }
         } catch (error) {
           console.error("Error loading layers:", error);
         }
