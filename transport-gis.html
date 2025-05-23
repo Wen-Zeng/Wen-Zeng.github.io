@@ -85,12 +85,13 @@
       }).addTo(map);
 
       // Create layer groups for each transport type
+      // Only add highSpeedRailwayLayer to the map initially
       const highSpeedRailwayLayer = L.layerGroup().addTo(map);
-      const regularRailwayLayer = L.layerGroup().addTo(map);
-      const railwayStationLayer = L.layerGroup().addTo(map);
-      const motorwayLayer = L.layerGroup().addTo(map);
-      const highwayLayer = L.layerGroup().addTo(map);
-      const waterwayLayer = L.layerGroup().addTo(map);
+      const regularRailwayLayer = L.layerGroup(); // Remove .addTo(map)
+      const railwayStationLayer = L.layerGroup(); // Remove .addTo(map)
+      const motorwayLayer = L.layerGroup(); // Remove .addTo(map)
+      const highwayLayer = L.layerGroup(); // Remove .addTo(map)
+      const waterwayLayer = L.layerGroup(); // Remove .addTo(map)
 
       // Create base layers object
       const baseLayers = {
