@@ -177,41 +177,8 @@
         }
       }
 
-      // Add loading indicator
-      function showLoading() {
-        const loadingDiv = document.createElement("div");
-        loadingDiv.id = "loading-indicator";
-        loadingDiv.innerHTML = "Loading data...";
-        document.body.appendChild(loadingDiv);
-      }
-
-      function hideLoading() {
-        const loadingDiv = document.getElementById("loading-indicator");
-        if (loadingDiv) {
-          loadingDiv.remove();
-        }
-      }
-
-      // Add CSS for loading indicator
-      const style = document.createElement("style");
-      style.textContent = `
-        #loading-indicator {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          padding: 20px;
-          border-radius: 5px;
-          z-index: 1000;
-        }
-      `;
-      document.head.appendChild(style);
-
       // Initialize map and load layers
       document.addEventListener("DOMContentLoaded", async () => {
-        showLoading();
         try {
           // Load all layers
           await Promise.all([
@@ -268,8 +235,6 @@
           }
         } catch (error) {
           console.error("Error loading layers:", error);
-        } finally {
-          hideLoading();
         }
       });
     </script>
