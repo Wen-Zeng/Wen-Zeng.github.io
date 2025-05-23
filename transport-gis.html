@@ -85,7 +85,7 @@
       }).addTo(map);
 
       // Create layer groups for each transport type
-      const highSpeedRailwayLayer = L.layerGroup();
+      const highSpeedRailwayLayer = L.layerGroup().addTo(map); // Add to map by default
       const regularRailwayLayer = L.layerGroup();
       const railwayStationLayer = L.layerGroup();
       const motorwayLayer = L.layerGroup();
@@ -102,7 +102,7 @@
         ),
       };
 
-      // Create overlay layers object with High-Speed Railway checked by default
+      // Create overlay layers object
       const overlayLayers = {
         "High-Speed Railway": highSpeedRailwayLayer,
         "Regular Railway": regularRailwayLayer,
@@ -248,21 +248,6 @@
               weight: 2,
             }),
           ]);
-
-          // Add High-Speed Railway layer to the map by default
-          highSpeedRailwayLayer.addTo(map);
-
-          // Update the layer control to show High-Speed Railway as checked
-          const layerControlContainer = document.querySelector(
-            ".leaflet-control-layers-list"
-          );
-          if (layerControlContainer) {
-            const highSpeedRailwayCheckbox =
-              layerControlContainer.querySelector('input[type="checkbox"]');
-            if (highSpeedRailwayCheckbox) {
-              highSpeedRailwayCheckbox.checked = true;
-            }
-          }
         } catch (error) {
           console.error("Error loading layers:", error);
         } finally {
