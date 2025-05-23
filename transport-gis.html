@@ -79,16 +79,10 @@
       // Initialize the map
       const map = L.map("map").setView([35.8617, 104.1954], 4);
 
-      // Add CartoDB dark matter base layer
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
-          maxZoom: 19,
-        }
-      ).addTo(map);
+      // Add OpenStreetMap base layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
 
       // Create layer groups for each transport type
       const highSpeedRailwayLayer = L.layerGroup();
@@ -98,15 +92,12 @@
       const highwayLayer = L.layerGroup();
       const waterwayLayer = L.layerGroup();
 
-      // Create base layers object with dark theme
+      // Create base layers object
       const baseLayers = {
-        "Dark Map": L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        OpenStreetMap: L.tileLayer(
+          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
           {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 19,
+            attribution: "© OpenStreetMap contributors",
           }
         ),
       };
