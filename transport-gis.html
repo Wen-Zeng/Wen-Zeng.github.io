@@ -92,7 +92,7 @@
       // Initialize the map
       const map = L.map("map").setView([35.8617, 104.1954], 4);
 
-      // Add OpenStreetMap dark theme base layer
+      // Add Stadia Maps dark theme base layer
       L.tileLayer(
         "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png",
         {
@@ -139,46 +139,6 @@
           collapsed: false,
         })
         .addTo(map);
-
-      // Add CSS for loading indicator
-      const style = document.createElement("style");
-      style.textContent = `
-          #loading-indicator {
-              position: absolute;
-              top: 10px;
-              right: 10px;
-              background: rgba(0, 0, 0, 0.8);
-              color: white;
-              padding: 10px 15px;
-              border-radius: 4px;
-              z-index: 1000;
-              font-size: 14px;
-              display: none;
-          }
-      `;
-      document.head.appendChild(style);
-
-      // Add loading indicator div to the map
-      const loadingDiv = document.createElement("div");
-      loadingDiv.id = "loading-indicator";
-      loadingDiv.innerHTML = "Loading data...";
-      document.getElementById("map").appendChild(loadingDiv);
-
-      // Function to show loading indicator
-      function showLoading() {
-        const loadingDiv = document.getElementById("loading-indicator");
-        if (loadingDiv) {
-          loadingDiv.style.display = "block";
-        }
-      }
-
-      // Function to hide loading indicator
-      function hideLoading() {
-        const loadingDiv = document.getElementById("loading-indicator");
-        if (loadingDiv) {
-          loadingDiv.style.display = "none";
-        }
-      }
 
       // Function to load GeoJSON data
       async function loadGeoJSON(path, layer, style) {
@@ -239,7 +199,6 @@
 
       // Initialize map and load layers
       document.addEventListener("DOMContentLoaded", async () => {
-        showLoading();
         try {
           // Load High-Speed Railway first
           await loadGeoJSON(
@@ -298,8 +257,6 @@
           ]);
         } catch (error) {
           console.error("Error loading layers:", error);
-        } finally {
-          hideLoading();
         }
       });
     </script>
