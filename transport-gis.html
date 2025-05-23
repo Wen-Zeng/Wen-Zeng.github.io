@@ -85,13 +85,12 @@
       }).addTo(map);
 
       // Create layer groups for each transport type
-      // Only add highSpeedRailwayLayer to the map initially
-      const highSpeedRailwayLayer = L.layerGroup().addTo(map);
-      const regularRailwayLayer = L.layerGroup(); // Remove .addTo(map)
-      const railwayStationLayer = L.layerGroup(); // Remove .addTo(map)
-      const motorwayLayer = L.layerGroup(); // Remove .addTo(map)
-      const highwayLayer = L.layerGroup(); // Remove .addTo(map)
-      const waterwayLayer = L.layerGroup(); // Remove .addTo(map)
+      const highSpeedRailwayLayer = L.layerGroup();
+      const regularRailwayLayer = L.layerGroup();
+      const railwayStationLayer = L.layerGroup();
+      const motorwayLayer = L.layerGroup();
+      const highwayLayer = L.layerGroup();
+      const waterwayLayer = L.layerGroup();
 
       // Create base layers object
       const baseLayers = {
@@ -140,14 +139,11 @@
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          // Get the response as text first to handle encoding
           const text = await response.text();
 
           try {
-            // Parse the text as JSON
             const data = JSON.parse(text);
 
-            // Create GeoJSON layer with the provided style
             const geoJsonLayer = L.geoJSON(data, {
               style: style,
               onEachFeature: function (feature, layer) {
@@ -167,12 +163,12 @@
               },
             });
 
-            // Add to the layer group
+            // Only add to the layer group, not to the map
             geoJsonLayer.addTo(layer);
             return geoJsonLayer;
           } catch (parseError) {
             console.error("JSON Parse Error:", parseError);
-            console.error("Response text:", text.substring(0, 200) + "..."); // Log first 200 chars
+            console.error("Response text:", text.substring(0, 200) + "...");
             throw new Error("Invalid JSON format");
           }
         } catch (error) {
@@ -253,6 +249,9 @@
               weight: 2,
             }),
           ]);
+
+          // After loading all layers, add only the High-Speed Railway layer to the map
+          highSpeedRailwayLayer.addTo(map);
         } catch (error) {
           console.error("Error loading layers:", error);
         } finally {
