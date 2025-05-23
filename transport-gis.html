@@ -16,23 +16,27 @@
         width: 100%;
         margin: 20px 0;
       }
-      .layer-control {
-        background: white;
-        padding: 10px;
-        border-radius: 4px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
-      .layer-control label {
-        display: block;
-        margin: 5px 0;
-      }
       .map-popup {
         background: white;
         padding: 10px;
         border-radius: 4px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         max-width: 300px;
+      }
+      /* Add styles for the Leaflet control */
+      .leaflet-control-layers {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .leaflet-control-layers-list {
+        margin: 0;
+        padding: 0;
+      }
+      .leaflet-control-layers-list label {
+        display: block;
+        margin: 5px 0;
       }
     </style>
   </head>
@@ -55,65 +59,12 @@
         over time.
       </p>
 
-      <div class="layer-control">
-        <h3>Layer Controls</h3>
-        <label>
-          <input type="checkbox" id="highSpeedRailway" checked /> High-Speed
-          Railway
-        </label>
-        <label>
-          <input type="checkbox" id="regularRailway" checked /> Regular Railway
-        </label>
-        <label>
-          <input type="checkbox" id="railwayStation" checked /> Railway Station
-        </label>
-        <label>
-          <input type="checkbox" id="motorway" checked /> Motorway
-        </label>
-        <label> <input type="checkbox" id="highway" checked /> Highway </label>
-        <label>
-          <input type="checkbox" id="waterway" checked /> Waterway
-        </label>
-      </div>
-
       <div id="map"></div>
     </main>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-      // Add loading indicator
-      function showLoading() {
-        const loadingDiv = document.createElement("div");
-        loadingDiv.id = "loading-indicator";
-        loadingDiv.innerHTML = "Loading data...";
-        document.body.appendChild(loadingDiv);
-      }
-
-      function hideLoading() {
-        const loadingDiv = document.getElementById("loading-indicator");
-        if (loadingDiv) {
-          loadingDiv.remove();
-        }
-      }
-
-      // Add CSS for loading indicator
-      const style = document.createElement("style");
-      style.textContent = `
-        #loading-indicator {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          padding: 20px;
-          border-radius: 5px;
-          z-index: 1000;
-        }
-      `;
-      document.head.appendChild(style);
-
       // Initialize the map
       const map = L.map("map").setView([35.8617, 104.1954], 4);
 
@@ -129,6 +80,34 @@
       const motorwayLayer = L.layerGroup().addTo(map);
       const highwayLayer = L.layerGroup().addTo(map);
       const waterwayLayer = L.layerGroup().addTo(map);
+
+      // Create base layers object
+      const baseLayers = {
+        OpenStreetMap: L.tileLayer(
+          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          {
+            attribution: "© OpenStreetMap contributors",
+          }
+        ),
+      };
+
+      // Create overlay layers object
+      const overlayLayers = {
+        "High-Speed Railway": highSpeedRailwayLayer,
+        "Regular Railway": regularRailwayLayer,
+        "Railway Station": railwayStationLayer,
+        Motorway: motorwayLayer,
+        Highway: highwayLayer,
+        Waterway: waterwayLayer,
+      };
+
+      // Add layer control to the map
+      L.control
+        .layers(baseLayers, overlayLayers, {
+          position: "topleft",
+          collapsed: false,
+        })
+        .addTo(map);
 
       // Function to load GeoJSON data
       async function loadGeoJSON(path, layer, style) {
@@ -191,6 +170,38 @@
         }
       }
 
+      // Add loading indicator
+      function showLoading() {
+        const loadingDiv = document.createElement("div");
+        loadingDiv.id = "loading-indicator";
+        loadingDiv.innerHTML = "Loading data...";
+        document.body.appendChild(loadingDiv);
+      }
+
+      function hideLoading() {
+        const loadingDiv = document.getElementById("loading-indicator");
+        if (loadingDiv) {
+          loadingDiv.remove();
+        }
+      }
+
+      // Add CSS for loading indicator
+      const style = document.createElement("style");
+      style.textContent = `
+        #loading-indicator {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 20px;
+          border-radius: 5px;
+          z-index: 1000;
+        }
+      `;
+      document.head.appendChild(style);
+
       // Initialize map and load layers
       document.addEventListener("DOMContentLoaded", async () => {
         showLoading();
@@ -236,67 +247,6 @@
           hideLoading();
         }
       });
-
-      // Layer control functionality
-      document
-        .getElementById("highSpeedRailway")
-        .addEventListener("change", function (e) {
-          if (e.target.checked) {
-            map.addLayer(highSpeedRailwayLayer);
-          } else {
-            map.removeLayer(highSpeedRailwayLayer);
-          }
-        });
-
-      document
-        .getElementById("regularRailway")
-        .addEventListener("change", function (e) {
-          if (e.target.checked) {
-            map.addLayer(regularRailwayLayer);
-          } else {
-            map.removeLayer(regularRailwayLayer);
-          }
-        });
-
-      document
-        .getElementById("railwayStation")
-        .addEventListener("change", function (e) {
-          if (e.target.checked) {
-            map.addLayer(railwayStationLayer);
-          } else {
-            map.removeLayer(railwayStationLayer);
-          }
-        });
-
-      document
-        .getElementById("motorway")
-        .addEventListener("change", function (e) {
-          if (e.target.checked) {
-            map.addLayer(motorwayLayer);
-          } else {
-            map.removeLayer(motorwayLayer);
-          }
-        });
-
-      document
-        .getElementById("highway")
-        .addEventListener("change", function (e) {
-          if (e.target.checked) {
-            map.addLayer(highwayLayer);
-          } else {
-            map.removeLayer(highwayLayer);
-          }
-        });
-
-      document
-        .getElementById("waterway")
-        .addEventListener("change", function (e) {
-          if (e.target.checked) {
-            map.addLayer(waterwayLayer);
-          } else {
-            map.removeLayer(waterwayLayer);
-          }
-        });
     </script>
   </body>
 </html>
