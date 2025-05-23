@@ -102,7 +102,7 @@
         ),
       };
 
-      // Create overlay layers object
+      // Create overlay layers object with High-Speed Railway checked by default
       const overlayLayers = {
         "High-Speed Railway": highSpeedRailwayLayer,
         "Regular Railway": regularRailwayLayer,
@@ -113,7 +113,7 @@
       };
 
       // Add layer control to the map
-      L.control
+      const layerControl = L.control
         .layers(baseLayers, overlayLayers, {
           position: "topleft",
           collapsed: false,
@@ -163,7 +163,6 @@
               },
             });
 
-            // Only add to the layer group, not to the map
             geoJsonLayer.addTo(layer);
             return geoJsonLayer;
           } catch (parseError) {
@@ -250,8 +249,20 @@
             }),
           ]);
 
-          // After loading all layers, add only the High-Speed Railway layer to the map
+          // Add High-Speed Railway layer to the map by default
           highSpeedRailwayLayer.addTo(map);
+
+          // Update the layer control to show High-Speed Railway as checked
+          const layerControlContainer = document.querySelector(
+            ".leaflet-control-layers-list"
+          );
+          if (layerControlContainer) {
+            const highSpeedRailwayCheckbox =
+              layerControlContainer.querySelector('input[type="checkbox"]');
+            if (highSpeedRailwayCheckbox) {
+              highSpeedRailwayCheckbox.checked = true;
+            }
+          }
         } catch (error) {
           console.error("Error loading layers:", error);
         } finally {
