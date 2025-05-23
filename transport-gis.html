@@ -85,7 +85,7 @@
       }).addTo(map);
 
       // Create layer groups for each transport type
-      const highSpeedRailwayLayer = L.layerGroup().addTo(map); // Add to map by default
+      const highSpeedRailwayLayer = L.layerGroup();
       const regularRailwayLayer = L.layerGroup();
       const railwayStationLayer = L.layerGroup();
       const motorwayLayer = L.layerGroup();
@@ -213,6 +213,7 @@
       document.addEventListener("DOMContentLoaded", async () => {
         showLoading();
         try {
+          // Load all layers
           await Promise.all([
             loadGeoJSON(
               "Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
@@ -248,6 +249,23 @@
               weight: 2,
             }),
           ]);
+
+          // Add High-Speed Railway layer to the map
+          highSpeedRailwayLayer.addTo(map);
+
+          // Update the layer control to show High-Speed Railway as checked
+          const layerControlContainer = document.querySelector(
+            ".leaflet-control-layers-list"
+          );
+          if (layerControlContainer) {
+            const checkboxes = layerControlContainer.querySelectorAll(
+              'input[type="checkbox"]'
+            );
+            checkboxes.forEach((checkbox, index) => {
+              // First checkbox is High-Speed Railway
+              checkbox.checked = index === 0;
+            });
+          }
         } catch (error) {
           console.error("Error loading layers:", error);
         } finally {
