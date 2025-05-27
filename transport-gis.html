@@ -10,11 +10,22 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     />
+    <!-- Leaflet.Layers.Tree CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-layers-tree@1.0.0/dist/leaflet-layers-tree.css"
+    />
     <style>
       #map {
         height: 600px;
         width: 100%;
         margin: 20px 0;
+      }
+      .leaflet-layers-tree-header-name {
+        font-weight: bold;
+      }
+      .leaflet-layers-tree-header {
+        cursor: pointer;
       }
     </style>
   </head>
@@ -42,12 +53,14 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Leaflet.Layers.Tree JS -->
+    <script src="https://unpkg.com/leaflet-layers-tree@1.0.0/dist/leaflet-layers-tree.js"></script>
     <script>
       // Initialize the map
       const map = L.map("map").setView([35.8617, 104.1954], 4);
 
       // Add CartoDB dark theme base layer
-      L.tileLayer(
+      const baseLayer = L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
           attribution:
@@ -66,37 +79,53 @@
       const highwayLayer = L.layerGroup();
       const waterwayLayer = L.layerGroup();
 
-      // Create base layers object with dark theme
-      const baseLayers = {
-        "Dark Map": L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      // Create tree structure for layer control
+      const treeData = {
+        label: "Transport Networks",
+        selectAllCheckbox: true,
+        children: [
           {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 19,
-          }
-        ),
-      };
-
-      // Create overlay layers object
-      const overlayLayers = {
-        "High-Speed Railway (2020)": highSpeedRailwayLayer,
-        "High-Speed Railway (2003)": highSpeedRailway2003Layer,
-        "Regular Railway": regularRailwayLayer,
-        "Railway Station": railwayStationLayer,
-        Motorway: motorwayLayer,
-        Highway: highwayLayer,
-        Waterway: waterwayLayer,
+            label: "High-Speed Railway",
+            children: [
+              {
+                label: "2020",
+                layer: highSpeedRailwayLayer,
+              },
+              {
+                label: "2003",
+                layer: highSpeedRailway2003Layer,
+              },
+            ],
+          },
+          {
+            label: "Regular Railway",
+            layer: regularRailwayLayer,
+          },
+          {
+            label: "Railway Station",
+            layer: railwayStationLayer,
+          },
+          {
+            label: "Motorway",
+            layer: motorwayLayer,
+          },
+          {
+            label: "Highway",
+            layer: highwayLayer,
+          },
+          {
+            label: "Waterway",
+            layer: waterwayLayer,
+          },
+        ],
       };
 
       // Add layer control to the map
-      const layerControl = L.control
-        .layers(baseLayers, overlayLayers, {
-          position: "topleft",
-          collapsed: false,
-        })
-        .addTo(map);
+      const tree = new L.Control.Layers.Tree(treeData, {
+        namedToggle: true,
+        collapseAll: false,
+        position: "topleft",
+      }).addTo(map);
 
       // Function to load GeoJSON data
       async function loadGeoJSON(path, layer, style) {
@@ -174,20 +203,6 @@
 
           // Add High-Speed Railway 2020 layer to the map by default
           highSpeedRailwayLayer.addTo(map);
-
-          // Update the layer control to show High-Speed Railway 2020 as checked
-          const layerControlContainer = document.querySelector(
-            ".leaflet-control-layers-list"
-          );
-          if (layerControlContainer) {
-            const checkboxes = layerControlContainer.querySelectorAll(
-              'input[type="checkbox"]'
-            );
-            checkboxes.forEach((checkbox, index) => {
-              // First checkbox is High-Speed Railway 2020
-              checkbox.checked = index === 0;
-            });
-          }
 
           // Load other layers in the background
           await Promise.all([
