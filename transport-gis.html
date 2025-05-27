@@ -43,6 +43,10 @@
       .ol-layerswitcher {
         top: 0.5em;
         left: 0.5em;
+        right: auto !important;
+      }
+      .ol-layerswitcher-panel {
+        left: 0;
         right: auto;
       }
       .ol-layerswitcher button {
@@ -316,6 +320,7 @@
         activationMode: "click",
         startActive: false,
         groupToggleEnter: true,
+        className: "ol-layerswitcher ol-layerswitcher-left",
       });
       map.addControl(layerSwitcher);
 
