@@ -75,114 +75,128 @@
         "Dark Map": baseLayer,
       };
 
-      // Create year-based layer groups for each transport type
-      const highSpeedRailwayLayers = {};
-      const regularRailwayLayers = {};
-      const highSpeedRailwayStationLayers = {};
-      const railwayStationLayers = {};
-      const regularRailwayStationLayers = {};
-      const motorwayLayers = {};
-      const highwayLayers = {};
-      const waterwayLayers = {};
-
-      // Initialize year-based layers
-      for (let year = 2003; year <= 2020; year++) {
-        highSpeedRailwayLayers[year] = L.layerGroup();
-        highSpeedRailwayStationLayers[year] = L.layerGroup();
-      }
-
-      for (let year = 1995; year <= 2020; year++) {
-        regularRailwayLayers[year] = L.layerGroup();
-        railwayStationLayers[year] = L.layerGroup();
-        regularRailwayStationLayers[year] = L.layerGroup();
-      }
-
-      motorwayLayers[1993] = L.layerGroup();
-      motorwayLayers[2020] = L.layerGroup();
-      highwayLayers[1993] = L.layerGroup();
-      highwayLayers[2020] = L.layerGroup();
-      waterwayLayers[2020] = L.layerGroup();
-
-      // Create tree structure for layer control
-      const treeData = {
-        label: "Transport Networks",
-        selectAllCheckbox: true,
-        children: [
-          {
-            label: "High-Speed Railway",
-            children: Object.entries(highSpeedRailwayLayers).map(
-              ([year, layer]) => ({
-                label: year,
-                layer: layer,
-              })
-            ),
-          },
-          {
-            label: "Regular Railway",
-            children: Object.entries(regularRailwayLayers).map(
-              ([year, layer]) => ({
-                label: year,
-                layer: layer,
-              })
-            ),
-          },
-          {
-            label: "High-Speed Railway Station",
-            children: Object.entries(highSpeedRailwayStationLayers).map(
-              ([year, layer]) => ({
-                label: year,
-                layer: layer,
-              })
-            ),
-          },
-          {
-            label: "Railway Station",
-            children: Object.entries(railwayStationLayers).map(
-              ([year, layer]) => ({
-                label: year,
-                layer: layer,
-              })
-            ),
-          },
-          {
-            label: "Regular Railway Station",
-            children: Object.entries(regularRailwayStationLayers).map(
-              ([year, layer]) => ({
-                label: year,
-                layer: layer,
-              })
-            ),
-          },
-          {
-            label: "Motorway",
-            children: Object.entries(motorwayLayers).map(([year, layer]) => ({
-              label: year,
-              layer: layer,
-            })),
-          },
-          {
-            label: "Highway",
-            children: Object.entries(highwayLayers).map(([year, layer]) => ({
-              label: year,
-              layer: layer,
-            })),
-          },
-          {
-            label: "Waterway",
-            children: Object.entries(waterwayLayers).map(([year, layer]) => ({
-              label: year,
-              layer: layer,
-            })),
-          },
-        ],
+      // Create overlay layers object with nested groups
+      const overlayLayers = {
+        "High-Speed Railway": {
+          2003: L.layerGroup(),
+          2004: L.layerGroup(),
+          2005: L.layerGroup(),
+          2006: L.layerGroup(),
+          2007: L.layerGroup(),
+          2008: L.layerGroup(),
+          2009: L.layerGroup(),
+          2010: L.layerGroup(),
+          2011: L.layerGroup(),
+          2012: L.layerGroup(),
+          2013: L.layerGroup(),
+          2014: L.layerGroup(),
+          2015: L.layerGroup(),
+          2016: L.layerGroup(),
+          2017: L.layerGroup(),
+          2018: L.layerGroup(),
+          2019: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        "Regular Railway": {
+          1995: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        "High-Speed Railway Station": {
+          2003: L.layerGroup(),
+          2004: L.layerGroup(),
+          2005: L.layerGroup(),
+          2006: L.layerGroup(),
+          2007: L.layerGroup(),
+          2008: L.layerGroup(),
+          2009: L.layerGroup(),
+          2010: L.layerGroup(),
+          2011: L.layerGroup(),
+          2012: L.layerGroup(),
+          2013: L.layerGroup(),
+          2014: L.layerGroup(),
+          2015: L.layerGroup(),
+          2016: L.layerGroup(),
+          2017: L.layerGroup(),
+          2018: L.layerGroup(),
+          2019: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        "Railway Station": {
+          1995: L.layerGroup(),
+          1996: L.layerGroup(),
+          1997: L.layerGroup(),
+          1998: L.layerGroup(),
+          1999: L.layerGroup(),
+          2000: L.layerGroup(),
+          2001: L.layerGroup(),
+          2002: L.layerGroup(),
+          2003: L.layerGroup(),
+          2004: L.layerGroup(),
+          2005: L.layerGroup(),
+          2006: L.layerGroup(),
+          2007: L.layerGroup(),
+          2008: L.layerGroup(),
+          2009: L.layerGroup(),
+          2010: L.layerGroup(),
+          2011: L.layerGroup(),
+          2012: L.layerGroup(),
+          2013: L.layerGroup(),
+          2014: L.layerGroup(),
+          2015: L.layerGroup(),
+          2016: L.layerGroup(),
+          2017: L.layerGroup(),
+          2018: L.layerGroup(),
+          2019: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        "Regular Railway Station": {
+          1995: L.layerGroup(),
+          1996: L.layerGroup(),
+          1997: L.layerGroup(),
+          1998: L.layerGroup(),
+          1999: L.layerGroup(),
+          2000: L.layerGroup(),
+          2001: L.layerGroup(),
+          2002: L.layerGroup(),
+          2003: L.layerGroup(),
+          2004: L.layerGroup(),
+          2005: L.layerGroup(),
+          2006: L.layerGroup(),
+          2007: L.layerGroup(),
+          2008: L.layerGroup(),
+          2009: L.layerGroup(),
+          2010: L.layerGroup(),
+          2011: L.layerGroup(),
+          2012: L.layerGroup(),
+          2013: L.layerGroup(),
+          2014: L.layerGroup(),
+          2015: L.layerGroup(),
+          2016: L.layerGroup(),
+          2017: L.layerGroup(),
+          2018: L.layerGroup(),
+          2019: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        Motorway: {
+          1993: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        Highway: {
+          1993: L.layerGroup(),
+          2020: L.layerGroup(),
+        },
+        Waterway: {
+          2020: L.layerGroup(),
+        },
       };
 
       // Add layer control to the map
-      const tree = new L.Control.Layers.Tree(treeData, {
-        namedToggle: true,
-        collapseAll: false,
-        position: "topleft",
-      }).addTo(map);
+      L.control
+        .layers(baseLayers, overlayLayers, {
+          position: "topleft",
+          collapsed: false,
+        })
+        .addTo(map);
 
       // Function to load GeoJSON data
       async function loadGeoJSON(path, style) {
@@ -238,7 +252,7 @@
               `Data/HighSpeedRailway/HighSpeedRailway${year}.geojson`,
               { color: "red", weight: 2 }
             );
-            layer.addTo(highSpeedRailwayLayers[year]);
+            layer.addTo(overlayLayers["High-Speed Railway"][year]);
           }
 
           // Load Regular Railway layers (1995, 2020)
@@ -246,13 +260,13 @@
             "Data/RegularRailway/RegularRailway1995.geojson",
             { color: "orange", weight: 2 }
           );
-          regularRailway1995.addTo(regularRailwayLayers[1995]);
+          regularRailway1995.addTo(overlayLayers["Regular Railway"]["1995"]);
 
           const regularRailway2020 = await loadGeoJSON(
             "Data/RegularRailway/RegularRailway2020.geojson",
             { color: "orange", weight: 2 }
           );
-          regularRailway2020.addTo(regularRailwayLayers[2020]);
+          regularRailway2020.addTo(overlayLayers["Regular Railway"]["2020"]);
 
           // Load High-Speed Railway Station layers (2003-2020)
           for (let year = 2003; year <= 2020; year++) {
@@ -266,7 +280,7 @@
                 fillOpacity: 1,
               }
             );
-            layer.addTo(highSpeedRailwayStationLayers[year]);
+            layer.addTo(overlayLayers["High-Speed Railway Station"][year]);
           }
 
           // Load Railway Station layers (1995-2020)
@@ -281,7 +295,7 @@
                 fillOpacity: 1,
               }
             );
-            layer.addTo(railwayStationLayers[year]);
+            layer.addTo(overlayLayers["Railway Station"][year]);
           }
 
           // Load Regular Railway Station layers (1995-2020)
@@ -296,7 +310,7 @@
                 fillOpacity: 1,
               }
             );
-            layer.addTo(regularRailwayStationLayers[year]);
+            layer.addTo(overlayLayers["Regular Railway Station"][year]);
           }
 
           // Load Motorway layers (1993, 2020)
@@ -304,36 +318,36 @@
             "Data/Motorway/Motorway1993.geojson",
             { color: "blue", weight: 2 }
           );
-          motorway1993.addTo(motorwayLayers[1993]);
+          motorway1993.addTo(overlayLayers["Motorway"]["1993"]);
 
           const motorway2020 = await loadGeoJSON(
             "Data/Motorway/Motorway2020.geojson",
             { color: "blue", weight: 2 }
           );
-          motorway2020.addTo(motorwayLayers[2020]);
+          motorway2020.addTo(overlayLayers["Motorway"]["2020"]);
 
           // Load Highway layers (1993, 2020)
           const highway1993 = await loadGeoJSON(
             "Data/Highway/Highways1993.geojson",
             { color: "green", weight: 2 }
           );
-          highway1993.addTo(highwayLayers[1993]);
+          highway1993.addTo(overlayLayers["Highway"]["1993"]);
 
           const highway2020 = await loadGeoJSON(
             "Data/Highway/Highways2020.geojson",
             { color: "green", weight: 2 }
           );
-          highway2020.addTo(highwayLayers[2020]);
+          highway2020.addTo(overlayLayers["Highway"]["2020"]);
 
           // Load Waterway layer
           const waterwayLayer = await loadGeoJSON(
             "Data/Waterway/Waterway.geojson",
             { color: "cyan", weight: 2 }
           );
-          waterwayLayer.addTo(waterwayLayers[2020]);
+          waterwayLayer.addTo(overlayLayers["Waterway"]["2020"]);
 
           // Add 2020 High-Speed Railway layer to the map by default
-          highSpeedRailwayLayers[2020].addTo(map);
+          overlayLayers["High-Speed Railway"]["2020"].addTo(map);
         } catch (error) {
           console.error("Error loading layers:", error);
         }
