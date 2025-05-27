@@ -100,14 +100,54 @@
 
       // Create overlay layers object with groups
       const overlayLayers = {
-        "High-Speed Railway": highSpeedRailwayLayers,
-        "Regular Railway": regularRailwayLayers,
-        "High-Speed Railway Station": highSpeedRailwayStationLayers,
-        "Railway Station": railwayStationLayers,
-        "Regular Railway Station": regularRailwayStationLayers,
-        Motorway: motorwayLayers,
-        Highway: highwayLayers,
-        Waterway: waterwayLayers,
+        "High-Speed Railway": Object.fromEntries(
+          Object.entries(highSpeedRailwayLayers).map(([year, layer]) => [
+            `${year} High-Speed Railway`,
+            layer,
+          ])
+        ),
+        "Regular Railway": Object.fromEntries(
+          Object.entries(regularRailwayLayers).map(([year, layer]) => [
+            `${year} Regular Railway`,
+            layer,
+          ])
+        ),
+        "High-Speed Railway Station": Object.fromEntries(
+          Object.entries(highSpeedRailwayStationLayers).map(([year, layer]) => [
+            `${year} High-Speed Railway Station`,
+            layer,
+          ])
+        ),
+        "Railway Station": Object.fromEntries(
+          Object.entries(railwayStationLayers).map(([year, layer]) => [
+            `${year} Railway Station`,
+            layer,
+          ])
+        ),
+        "Regular Railway Station": Object.fromEntries(
+          Object.entries(regularRailwayStationLayers).map(([year, layer]) => [
+            `${year} Regular Railway Station`,
+            layer,
+          ])
+        ),
+        Motorway: Object.fromEntries(
+          Object.entries(motorwayLayers).map(([year, layer]) => [
+            `${year} Motorway`,
+            layer,
+          ])
+        ),
+        Highway: Object.fromEntries(
+          Object.entries(highwayLayers).map(([year, layer]) => [
+            `${year} Highway`,
+            layer,
+          ])
+        ),
+        Waterway: Object.fromEntries(
+          Object.entries(waterwayLayers).map(([year, layer]) => [
+            `${year} Waterway`,
+            layer,
+          ])
+        ),
       };
 
       // Add layer control to the map
