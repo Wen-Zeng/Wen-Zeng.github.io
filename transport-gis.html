@@ -100,54 +100,117 @@
 
       // Create overlay layers object with groups
       const overlayLayers = {
-        "High-Speed Railway": Object.fromEntries(
-          Object.entries(highSpeedRailwayLayers).map(([year, layer]) => [
-            `${year} High-Speed Railway`,
-            layer,
-          ])
-        ),
-        "Regular Railway": Object.fromEntries(
-          Object.entries(regularRailwayLayers).map(([year, layer]) => [
-            `${year} Regular Railway`,
-            layer,
-          ])
-        ),
-        "High-Speed Railway Station": Object.fromEntries(
-          Object.entries(highSpeedRailwayStationLayers).map(([year, layer]) => [
-            `${year} High-Speed Railway Station`,
-            layer,
-          ])
-        ),
-        "Railway Station": Object.fromEntries(
-          Object.entries(railwayStationLayers).map(([year, layer]) => [
-            `${year} Railway Station`,
-            layer,
-          ])
-        ),
-        "Regular Railway Station": Object.fromEntries(
-          Object.entries(regularRailwayStationLayers).map(([year, layer]) => [
-            `${year} Regular Railway Station`,
-            layer,
-          ])
-        ),
-        Motorway: Object.fromEntries(
-          Object.entries(motorwayLayers).map(([year, layer]) => [
-            `${year} Motorway`,
-            layer,
-          ])
-        ),
-        Highway: Object.fromEntries(
-          Object.entries(highwayLayers).map(([year, layer]) => [
-            `${year} Highway`,
-            layer,
-          ])
-        ),
-        Waterway: Object.fromEntries(
-          Object.entries(waterwayLayers).map(([year, layer]) => [
-            `${year} Waterway`,
-            layer,
-          ])
-        ),
+        "High-Speed Railway": {
+          2003: highSpeedRailwayLayers[2003],
+          2004: highSpeedRailwayLayers[2004],
+          2005: highSpeedRailwayLayers[2005],
+          2006: highSpeedRailwayLayers[2006],
+          2007: highSpeedRailwayLayers[2007],
+          2008: highSpeedRailwayLayers[2008],
+          2009: highSpeedRailwayLayers[2009],
+          2010: highSpeedRailwayLayers[2010],
+          2011: highSpeedRailwayLayers[2011],
+          2012: highSpeedRailwayLayers[2012],
+          2013: highSpeedRailwayLayers[2013],
+          2014: highSpeedRailwayLayers[2014],
+          2015: highSpeedRailwayLayers[2015],
+          2016: highSpeedRailwayLayers[2016],
+          2017: highSpeedRailwayLayers[2017],
+          2018: highSpeedRailwayLayers[2018],
+          2019: highSpeedRailwayLayers[2019],
+          2020: highSpeedRailwayLayers[2020],
+        },
+        "Regular Railway": {
+          1995: regularRailwayLayers[1995],
+          2020: regularRailwayLayers[2020],
+        },
+        "High-Speed Railway Station": {
+          2003: highSpeedRailwayStationLayers[2003],
+          2004: highSpeedRailwayStationLayers[2004],
+          2005: highSpeedRailwayStationLayers[2005],
+          2006: highSpeedRailwayStationLayers[2006],
+          2007: highSpeedRailwayStationLayers[2007],
+          2008: highSpeedRailwayStationLayers[2008],
+          2009: highSpeedRailwayStationLayers[2009],
+          2010: highSpeedRailwayStationLayers[2010],
+          2011: highSpeedRailwayStationLayers[2011],
+          2012: highSpeedRailwayStationLayers[2012],
+          2013: highSpeedRailwayStationLayers[2013],
+          2014: highSpeedRailwayStationLayers[2014],
+          2015: highSpeedRailwayStationLayers[2015],
+          2016: highSpeedRailwayStationLayers[2016],
+          2017: highSpeedRailwayStationLayers[2017],
+          2018: highSpeedRailwayStationLayers[2018],
+          2019: highSpeedRailwayStationLayers[2019],
+          2020: highSpeedRailwayStationLayers[2020],
+        },
+        "Railway Station": {
+          1995: railwayStationLayers[1995],
+          1996: railwayStationLayers[1996],
+          1997: railwayStationLayers[1997],
+          1998: railwayStationLayers[1998],
+          1999: railwayStationLayers[1999],
+          2000: railwayStationLayers[2000],
+          2001: railwayStationLayers[2001],
+          2002: railwayStationLayers[2002],
+          2003: railwayStationLayers[2003],
+          2004: railwayStationLayers[2004],
+          2005: railwayStationLayers[2005],
+          2006: railwayStationLayers[2006],
+          2007: railwayStationLayers[2007],
+          2008: railwayStationLayers[2008],
+          2009: railwayStationLayers[2009],
+          2010: railwayStationLayers[2010],
+          2011: railwayStationLayers[2011],
+          2012: railwayStationLayers[2012],
+          2013: railwayStationLayers[2013],
+          2014: railwayStationLayers[2014],
+          2015: railwayStationLayers[2015],
+          2016: railwayStationLayers[2016],
+          2017: railwayStationLayers[2017],
+          2018: railwayStationLayers[2018],
+          2019: railwayStationLayers[2019],
+          2020: railwayStationLayers[2020],
+        },
+        "Regular Railway Station": {
+          1995: regularRailwayStationLayers[1995],
+          1996: regularRailwayStationLayers[1996],
+          1997: regularRailwayStationLayers[1997],
+          1998: regularRailwayStationLayers[1998],
+          1999: regularRailwayStationLayers[1999],
+          2000: regularRailwayStationLayers[2000],
+          2001: regularRailwayStationLayers[2001],
+          2002: regularRailwayStationLayers[2002],
+          2003: regularRailwayStationLayers[2003],
+          2004: regularRailwayStationLayers[2004],
+          2005: regularRailwayStationLayers[2005],
+          2006: regularRailwayStationLayers[2006],
+          2007: regularRailwayStationLayers[2007],
+          2008: regularRailwayStationLayers[2008],
+          2009: regularRailwayStationLayers[2009],
+          2010: regularRailwayStationLayers[2010],
+          2011: regularRailwayStationLayers[2011],
+          2012: regularRailwayStationLayers[2012],
+          2013: regularRailwayStationLayers[2013],
+          2014: regularRailwayStationLayers[2014],
+          2015: regularRailwayStationLayers[2015],
+          2016: regularRailwayStationLayers[2016],
+          2017: regularRailwayStationLayers[2017],
+          2018: regularRailwayStationLayers[2018],
+          2019: regularRailwayStationLayers[2019],
+          2020: regularRailwayStationLayers[2020],
+        },
+        Motorway: {
+          1993: motorwayLayers[1993],
+          2020: motorwayLayers[2020],
+        },
+        Highway: {
+          1993: highwayLayers[1993],
+          2020: highwayLayers[2020],
+        },
+        Waterway: {
+          2020: waterwayLayers[2020],
+        },
       };
 
       // Add layer control to the map
