@@ -10,22 +10,25 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     />
-    <!-- Leaflet.Layers.Tree CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet-layers-tree@1.0.0/dist/leaflet-layers-tree.css"
-    />
     <style>
       #map {
         height: 600px;
         width: 100%;
         margin: 20px 0;
       }
-      .leaflet-layers-tree-header-name {
-        font-weight: bold;
+      .layer-group {
+        margin-left: 20px;
       }
-      .leaflet-layers-tree-header {
+      .layer-group-header {
+        font-weight: bold;
         cursor: pointer;
+      }
+      .layer-group-content {
+        display: none;
+        margin-left: 20px;
+      }
+      .layer-group-content.show {
+        display: block;
       }
     </style>
   </head>
@@ -53,8 +56,6 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Leaflet.Layers.Tree JS -->
-    <script src="https://unpkg.com/leaflet-layers-tree@1.0.0/dist/leaflet-layers-tree.js"></script>
     <script>
       // Initialize the map
       const map = L.map("map").setView([35.8617, 104.1954], 4);
@@ -79,53 +80,31 @@
       const highwayLayer = L.layerGroup();
       const waterwayLayer = L.layerGroup();
 
-      // Create tree structure for layer control
-      const treeData = {
-        label: "Transport Networks",
-        selectAllCheckbox: true,
-        children: [
-          {
-            label: "High-Speed Railway",
-            children: [
-              {
-                label: "2020",
-                layer: highSpeedRailwayLayer,
-              },
-              {
-                label: "2003",
-                layer: highSpeedRailway2003Layer,
-              },
-            ],
-          },
-          {
-            label: "Regular Railway",
-            layer: regularRailwayLayer,
-          },
-          {
-            label: "Railway Station",
-            layer: railwayStationLayer,
-          },
-          {
-            label: "Motorway",
-            layer: motorwayLayer,
-          },
-          {
-            label: "Highway",
-            layer: highwayLayer,
-          },
-          {
-            label: "Waterway",
-            layer: waterwayLayer,
-          },
-        ],
+      // Create base layers object
+      const baseLayers = {
+        "Dark Map": baseLayer,
+      };
+
+      // Create overlay layers object
+      const overlayLayers = {
+        "High-Speed Railway": {
+          2020: highSpeedRailwayLayer,
+          2003: highSpeedRailway2003Layer,
+        },
+        "Regular Railway": regularRailwayLayer,
+        "Railway Station": railwayStationLayer,
+        Motorway: motorwayLayer,
+        Highway: highwayLayer,
+        Waterway: waterwayLayer,
       };
 
       // Add layer control to the map
-      const tree = new L.Control.Layers.Tree(treeData, {
-        namedToggle: true,
-        collapseAll: false,
-        position: "topleft",
-      }).addTo(map);
+      const layerControl = L.control
+        .layers(baseLayers, overlayLayers, {
+          position: "topleft",
+          collapsed: false,
+        })
+        .addTo(map);
 
       // Function to load GeoJSON data
       async function loadGeoJSON(path, layer, style) {
@@ -235,6 +214,31 @@
               weight: 2,
             }),
           ]);
+
+          // Add custom layer control styling
+          const layerControlContainer = document.querySelector(
+            ".leaflet-control-layers-list"
+          );
+          if (layerControlContainer) {
+            const highSpeedRailwayGroup = layerControlContainer.querySelector(
+              'label:contains("High-Speed Railway")'
+            );
+            if (highSpeedRailwayGroup) {
+              highSpeedRailwayGroup.classList.add("layer-group-header");
+              const content = document.createElement("div");
+              content.classList.add("layer-group-content");
+              highSpeedRailwayGroup.parentNode.insertBefore(
+                content,
+                highSpeedRailwayGroup.nextSibling
+              );
+
+              highSpeedRailwayGroup.addEventListener("click", function (e) {
+                if (e.target.type !== "checkbox") {
+                  content.classList.toggle("show");
+                }
+              });
+            }
+          }
         } catch (error) {
           console.error("Error loading layers:", error);
         }
