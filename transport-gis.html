@@ -10,11 +10,22 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     />
+    <!-- Leaflet.Layers.Tree CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-layers-tree@1.0.0/dist/leaflet-layers-tree.css"
+    />
     <style>
       #map {
         height: 600px;
         width: 100%;
         margin: 20px 0;
+      }
+      .leaflet-layers-tree-header-name {
+        font-weight: bold;
+      }
+      .leaflet-layers-tree-header {
+        cursor: pointer;
       }
     </style>
   </head>
@@ -42,6 +53,8 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Leaflet.Layers.Tree JS -->
+    <script src="https://unpkg.com/leaflet-layers-tree@1.0.0/dist/leaflet-layers-tree.js"></script>
     <script>
       // Initialize the map
       const map = L.map("map").setView([35.8617, 104.1954], 4);
@@ -60,18 +73,6 @@
       // Create base layers object
       const baseLayers = {
         "Dark Map": baseLayer,
-      };
-
-      // Create overlay layers object with nested groups
-      const overlayLayers = {
-        "High-Speed Railway": L.layerGroup(),
-        "Regular Railway": L.layerGroup(),
-        "High-Speed Railway Station": L.layerGroup(),
-        "Railway Station": L.layerGroup(),
-        "Regular Railway Station": L.layerGroup(),
-        Motorway: L.layerGroup(),
-        Highway: L.layerGroup(),
-        Waterway: L.layerGroup(),
       };
 
       // Create year-based layer groups for each transport type
@@ -102,35 +103,86 @@
       highwayLayers[2020] = L.layerGroup();
       waterwayLayers[2020] = L.layerGroup();
 
-      // Add year-based layers to their respective transport type groups
-      for (let year = 2003; year <= 2020; year++) {
-        highSpeedRailwayLayers[year].addTo(overlayLayers["High-Speed Railway"]);
-        highSpeedRailwayStationLayers[year].addTo(
-          overlayLayers["High-Speed Railway Station"]
-        );
-      }
-
-      for (let year = 1995; year <= 2020; year++) {
-        regularRailwayLayers[year].addTo(overlayLayers["Regular Railway"]);
-        railwayStationLayers[year].addTo(overlayLayers["Railway Station"]);
-        regularRailwayStationLayers[year].addTo(
-          overlayLayers["Regular Railway Station"]
-        );
-      }
-
-      motorwayLayers[1993].addTo(overlayLayers["Motorway"]);
-      motorwayLayers[2020].addTo(overlayLayers["Motorway"]);
-      highwayLayers[1993].addTo(overlayLayers["Highway"]);
-      highwayLayers[2020].addTo(overlayLayers["Highway"]);
-      waterwayLayers[2020].addTo(overlayLayers["Waterway"]);
+      // Create tree structure for layer control
+      const treeData = {
+        label: "Transport Networks",
+        selectAllCheckbox: true,
+        children: [
+          {
+            label: "High-Speed Railway",
+            children: Object.entries(highSpeedRailwayLayers).map(
+              ([year, layer]) => ({
+                label: year,
+                layer: layer,
+              })
+            ),
+          },
+          {
+            label: "Regular Railway",
+            children: Object.entries(regularRailwayLayers).map(
+              ([year, layer]) => ({
+                label: year,
+                layer: layer,
+              })
+            ),
+          },
+          {
+            label: "High-Speed Railway Station",
+            children: Object.entries(highSpeedRailwayStationLayers).map(
+              ([year, layer]) => ({
+                label: year,
+                layer: layer,
+              })
+            ),
+          },
+          {
+            label: "Railway Station",
+            children: Object.entries(railwayStationLayers).map(
+              ([year, layer]) => ({
+                label: year,
+                layer: layer,
+              })
+            ),
+          },
+          {
+            label: "Regular Railway Station",
+            children: Object.entries(regularRailwayStationLayers).map(
+              ([year, layer]) => ({
+                label: year,
+                layer: layer,
+              })
+            ),
+          },
+          {
+            label: "Motorway",
+            children: Object.entries(motorwayLayers).map(([year, layer]) => ({
+              label: year,
+              layer: layer,
+            })),
+          },
+          {
+            label: "Highway",
+            children: Object.entries(highwayLayers).map(([year, layer]) => ({
+              label: year,
+              layer: layer,
+            })),
+          },
+          {
+            label: "Waterway",
+            children: Object.entries(waterwayLayers).map(([year, layer]) => ({
+              label: year,
+              layer: layer,
+            })),
+          },
+        ],
+      };
 
       // Add layer control to the map
-      L.control
-        .layers(baseLayers, overlayLayers, {
-          position: "topleft",
-          collapsed: false,
-        })
-        .addTo(map);
+      const tree = new L.Control.Layers.Tree(treeData, {
+        namedToggle: true,
+        collapseAll: false,
+        position: "topleft",
+      }).addTo(map);
 
       // Function to load GeoJSON data
       async function loadGeoJSON(path, style) {
