@@ -41,21 +41,25 @@
       .ol-control button:hover {
         background-color: #f8f8f8;
       }
-      /* Override default layer switcher positioning */
-      .ol-layerswitcher {
+      .ol-layerswitcher-container {
         position: absolute !important;
         top: 0.5em !important;
         left: 0.5em !important;
-        right: auto !important;
-        bottom: auto !important;
+        z-index: 1000;
+      }
+      .ol-layerswitcher {
+        position: static !important;
       }
       .ol-layerswitcher-panel {
         position: absolute !important;
         top: 0 !important;
         left: 2em !important;
-        right: auto !important;
-        bottom: auto !important;
-        margin: 0 !important;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        padding: 5px;
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
       }
       .ol-layerswitcher button {
         background-color: #fff;
@@ -71,13 +75,6 @@
       }
       .ol-layerswitcher button:hover {
         background-color: #f8f8f8;
-      }
-      .ol-layerswitcher-panel {
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 4px;
-        padding: 5px;
-        max-height: 400px;
-        overflow-y: auto;
       }
       .ol-layerswitcher-panel label {
         display: block;
@@ -328,10 +325,20 @@
         activationMode: "click",
         startActive: false,
         groupToggleEnter: true,
-        className: "ol-layerswitcher ol-layerswitcher-left",
-        position: "top-left",
       });
-      map.addControl(layerSwitcher);
+
+      // Create a custom control container for the layer switcher
+      const layerSwitcherContainer = document.createElement("div");
+      layerSwitcherContainer.className =
+        "ol-control ol-layerswitcher-container";
+      layerSwitcherContainer.style.position = "absolute";
+      layerSwitcherContainer.style.top = "0.5em";
+      layerSwitcherContainer.style.left = "0.5em";
+      layerSwitcherContainer.style.zIndex = "1000";
+
+      // Add the layer switcher to the custom container
+      layerSwitcherContainer.appendChild(layerSwitcher.element);
+      map.getViewport().appendChild(layerSwitcherContainer);
 
       // Add click handler for group labels
       document.addEventListener("click", function (e) {
