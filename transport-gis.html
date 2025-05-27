@@ -59,6 +59,7 @@
 
       // Create layer groups for each transport type
       const highSpeedRailwayLayer = L.layerGroup();
+      const highSpeedRailway2003Layer = L.layerGroup();
       const regularRailwayLayer = L.layerGroup();
       const railwayStationLayer = L.layerGroup();
       const motorwayLayer = L.layerGroup();
@@ -80,7 +81,8 @@
 
       // Create overlay layers object
       const overlayLayers = {
-        "High-Speed Railway": highSpeedRailwayLayer,
+        "High-Speed Railway 2020": highSpeedRailwayLayer,
+        "High-Speed Railway 2003": highSpeedRailway2003Layer,
         "Regular Railway": regularRailwayLayer,
         "Railway Station": railwayStationLayer,
         Motorway: motorwayLayer,
@@ -156,17 +158,24 @@
       // Initialize map and load layers
       document.addEventListener("DOMContentLoaded", async () => {
         try {
-          // Load High-Speed Railway first
-          await loadGeoJSON(
-            "Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
-            highSpeedRailwayLayer,
-            { color: "red", weight: 2 }
-          );
+          // Load High-Speed Railway layers
+          await Promise.all([
+            loadGeoJSON(
+              "Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
+              highSpeedRailwayLayer,
+              { color: "red", weight: 2 }
+            ),
+            loadGeoJSON(
+              "Data/HighSpeedRailway/HighSpeedRailway2003.geojson",
+              highSpeedRailway2003Layer,
+              { color: "red", weight: 2 }
+            ),
+          ]);
 
-          // Add High-Speed Railway layer to the map
+          // Add High-Speed Railway 2020 layer to the map by default
           highSpeedRailwayLayer.addTo(map);
 
-          // Update the layer control to show High-Speed Railway as checked
+          // Update the layer control to show High-Speed Railway 2020 as checked
           const layerControlContainer = document.querySelector(
             ".leaflet-control-layers-list"
           );
@@ -175,7 +184,7 @@
               'input[type="checkbox"]'
             );
             checkboxes.forEach((checkbox, index) => {
-              // First checkbox is High-Speed Railway
+              // First checkbox is High-Speed Railway 2020
               checkbox.checked = index === 0;
             });
           }
