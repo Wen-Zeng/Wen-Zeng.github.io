@@ -42,7 +42,8 @@
       }
       .ol-layerswitcher {
         top: 0.5em;
-        right: 0.5em;
+        left: 0.5em;
+        right: auto;
       }
       .ol-layerswitcher button {
         background-color: #fff;
@@ -75,6 +76,32 @@
       }
       .ol-layerswitcher-panel .group {
         margin-left: 15px;
+      }
+      .ol-layerswitcher-panel .group > label {
+        cursor: pointer;
+        position: relative;
+        padding-left: 20px;
+      }
+      .ol-layerswitcher-panel .group > label:before {
+        content: "▼";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        transition: transform 0.2s;
+      }
+      .ol-layerswitcher-panel .group.collapsed > label:before {
+        transform: translateY(-50%) rotate(-90deg);
+      }
+      .ol-layerswitcher-panel .group.collapsed > div {
+        display: none;
+      }
+      .popup-content {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
     </style>
   </head>
@@ -286,8 +313,19 @@
       const layerSwitcher = new ol.control.LayerSwitcher({
         tipLabel: "Layers",
         groupSelectStyle: "group",
+        activationMode: "click",
+        startActive: false,
+        groupToggleEnter: true,
       });
       map.addControl(layerSwitcher);
+
+      // Add click handler for group labels
+      document.addEventListener("click", function (e) {
+        if (e.target.matches(".ol-layerswitcher-panel .group > label")) {
+          const group = e.target.parentElement;
+          group.classList.toggle("collapsed");
+        }
+      });
     </script>
   </body>
 </html>
