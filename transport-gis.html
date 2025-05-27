@@ -47,7 +47,7 @@
       const map = L.map("map").setView([35.8617, 104.1954], 4);
 
       // Add CartoDB dark theme base layer
-      L.tileLayer(
+      const baseLayer = L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
           attribution:
@@ -57,48 +57,12 @@
         }
       ).addTo(map);
 
-      // Create layer groups for each transport type and year
-      const highSpeedRailwayLayers = {};
-      const regularRailwayLayers = {};
-      const highSpeedRailwayStationLayers = {};
-      const railwayStationLayers = {};
-      const regularRailwayStationLayers = {};
-      const motorwayLayers = {};
-      const highwayLayers = {};
-      const waterwayLayers = {};
-
-      // Initialize layers for each year
-      for (let year = 2003; year <= 2020; year++) {
-        highSpeedRailwayLayers[year] = L.layerGroup();
-        highSpeedRailwayStationLayers[year] = L.layerGroup();
-      }
-
-      for (let year = 1995; year <= 2020; year++) {
-        regularRailwayLayers[year] = L.layerGroup();
-        railwayStationLayers[year] = L.layerGroup();
-        regularRailwayStationLayers[year] = L.layerGroup();
-      }
-
-      motorwayLayers[1993] = L.layerGroup();
-      motorwayLayers[2020] = L.layerGroup();
-      highwayLayers[1993] = L.layerGroup();
-      highwayLayers[2020] = L.layerGroup();
-      waterwayLayers[2020] = L.layerGroup();
-
-      // Create base layers object with dark theme
+      // Create base layers object
       const baseLayers = {
-        "Dark Map": L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-          {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 19,
-          }
-        ),
+        "Dark Map": baseLayer,
       };
 
-      // Create overlay layers object with groups
+      // Create overlay layers object
       const overlayLayers = {
         "High-Speed Railway": L.layerGroup(),
         "Regular Railway": L.layerGroup(),
@@ -111,7 +75,7 @@
       };
 
       // Add layer control to the map
-      const layerControl = L.control
+      L.control
         .layers(baseLayers, overlayLayers, {
           position: "topleft",
           collapsed: false,
@@ -119,7 +83,7 @@
         .addTo(map);
 
       // Function to load GeoJSON data
-      async function loadGeoJSON(path, layer, style) {
+      async function loadGeoJSON(path, style) {
         try {
           console.log("Loading:", path);
           const response = await fetch(
@@ -137,37 +101,25 @@
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          const text = await response.text();
-
-          try {
-            const data = JSON.parse(text);
-
-            const geoJsonLayer = L.geoJSON(data, {
-              style: style,
-              onEachFeature: function (feature, layer) {
-                if (feature.properties) {
-                  let popupContent = '<div class="popup-content">';
-                  for (let prop in feature.properties) {
-                    if (
-                      feature.properties[prop] !== null &&
-                      feature.properties[prop] !== undefined
-                    ) {
-                      popupContent += `<p><strong>${prop}:</strong> ${feature.properties[prop]}</p>`;
-                    }
+          const data = await response.json();
+          return L.geoJSON(data, {
+            style: style,
+            onEachFeature: function (feature, layer) {
+              if (feature.properties) {
+                let popupContent = '<div class="popup-content">';
+                for (let prop in feature.properties) {
+                  if (
+                    feature.properties[prop] !== null &&
+                    feature.properties[prop] !== undefined
+                  ) {
+                    popupContent += `<p><strong>${prop}:</strong> ${feature.properties[prop]}</p>`;
                   }
-                  popupContent += "</div>";
-                  layer.bindPopup(popupContent);
                 }
-              },
-            });
-
-            geoJsonLayer.addTo(layer);
-            return geoJsonLayer;
-          } catch (parseError) {
-            console.error("JSON Parse Error:", parseError);
-            console.error("Response text:", text.substring(0, 200) + "...");
-            throw new Error("Invalid JSON format");
-          }
+                popupContent += "</div>";
+                layer.bindPopup(popupContent);
+              }
+            },
+          });
         } catch (error) {
           console.error("Error loading GeoJSON:", error);
           console.error("Path:", path);
@@ -182,31 +134,28 @@
           for (let year = 2003; year <= 2020; year++) {
             const layer = await loadGeoJSON(
               `Data/HighSpeedRailway/HighSpeedRailway${year}.geojson`,
-              highSpeedRailwayLayers[year],
               { color: "red", weight: 2 }
             );
             layer.addTo(overlayLayers["High-Speed Railway"]);
           }
 
           // Load Regular Railway layers (1995, 2020)
-          await Promise.all([
-            loadGeoJSON(
-              "Data/RegularRailway/RegularRailway1995.geojson",
-              regularRailwayLayers[1995],
-              { color: "orange", weight: 2 }
-            ).then((layer) => layer.addTo(overlayLayers["Regular Railway"])),
-            loadGeoJSON(
-              "Data/RegularRailway/RegularRailway2020.geojson",
-              regularRailwayLayers[2020],
-              { color: "orange", weight: 2 }
-            ).then((layer) => layer.addTo(overlayLayers["Regular Railway"])),
-          ]);
+          const regularRailway1995 = await loadGeoJSON(
+            "Data/RegularRailway/RegularRailway1995.geojson",
+            { color: "orange", weight: 2 }
+          );
+          regularRailway1995.addTo(overlayLayers["Regular Railway"]);
+
+          const regularRailway2020 = await loadGeoJSON(
+            "Data/RegularRailway/RegularRailway2020.geojson",
+            { color: "orange", weight: 2 }
+          );
+          regularRailway2020.addTo(overlayLayers["Regular Railway"]);
 
           // Load High-Speed Railway Station layers (2003-2020)
           for (let year = 2003; year <= 2020; year++) {
             const layer = await loadGeoJSON(
               `Data/HighSpeedRailwayStation/HighSpeedRailwayStation${year}.geojson`,
-              highSpeedRailwayStationLayers[year],
               {
                 radius: 5,
                 fillColor: "red",
@@ -222,7 +171,6 @@
           for (let year = 1995; year <= 2020; year++) {
             const layer = await loadGeoJSON(
               `Data/RailwayStation/RailwayStations${year}.geojson`,
-              railwayStationLayers[year],
               {
                 radius: 5,
                 fillColor: "red",
@@ -238,7 +186,6 @@
           for (let year = 1995; year <= 2020; year++) {
             const layer = await loadGeoJSON(
               `Data/RegularRailwayStation/RegularRailwayStation${year}.geojson`,
-              regularRailwayStationLayers[year],
               {
                 radius: 5,
                 fillColor: "orange",
@@ -251,53 +198,35 @@
           }
 
           // Load Motorway layers (1993, 2020)
-          await Promise.all([
-            loadGeoJSON(
-              "Data/Motorway/Motorway1993.geojson",
-              motorwayLayers[1993],
-              {
-                color: "blue",
-                weight: 2,
-              }
-            ).then((layer) => layer.addTo(overlayLayers["Motorway"])),
-            loadGeoJSON(
-              "Data/Motorway/Motorway2020.geojson",
-              motorwayLayers[2020],
-              {
-                color: "blue",
-                weight: 2,
-              }
-            ).then((layer) => layer.addTo(overlayLayers["Motorway"])),
-          ]);
+          const motorway1993 = await loadGeoJSON(
+            "Data/Motorway/Motorway1993.geojson",
+            { color: "blue", weight: 2 }
+          );
+          motorway1993.addTo(overlayLayers["Motorway"]);
+
+          const motorway2020 = await loadGeoJSON(
+            "Data/Motorway/Motorway2020.geojson",
+            { color: "blue", weight: 2 }
+          );
+          motorway2020.addTo(overlayLayers["Motorway"]);
 
           // Load Highway layers (1993, 2020)
-          await Promise.all([
-            loadGeoJSON(
-              "Data/Highway/Highways1993.geojson",
-              highwayLayers[1993],
-              {
-                color: "green",
-                weight: 2,
-              }
-            ).then((layer) => layer.addTo(overlayLayers["Highway"])),
-            loadGeoJSON(
-              "Data/Highway/Highways2020.geojson",
-              highwayLayers[2020],
-              {
-                color: "green",
-                weight: 2,
-              }
-            ).then((layer) => layer.addTo(overlayLayers["Highway"])),
-          ]);
+          const highway1993 = await loadGeoJSON(
+            "Data/Highway/Highways1993.geojson",
+            { color: "green", weight: 2 }
+          );
+          highway1993.addTo(overlayLayers["Highway"]);
+
+          const highway2020 = await loadGeoJSON(
+            "Data/Highway/Highways2020.geojson",
+            { color: "green", weight: 2 }
+          );
+          highway2020.addTo(overlayLayers["Highway"]);
 
           // Load Waterway layer
           const waterwayLayer = await loadGeoJSON(
             "Data/Waterway/Waterway.geojson",
-            waterwayLayers[2020],
-            {
-              color: "cyan",
-              weight: 2,
-            }
+            { color: "cyan", weight: 2 }
           );
           waterwayLayer.addTo(overlayLayers["Waterway"]);
 
