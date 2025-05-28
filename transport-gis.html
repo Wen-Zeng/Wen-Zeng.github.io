@@ -19,74 +19,24 @@
         height: 600px;
         width: 100%;
         margin: 20px 0;
-        position: relative;
       }
-      .ol-control {
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 4px;
-        padding: 2px;
-      }
-      .ol-control button {
-        background-color: #fff;
-        color: #333;
-        border: none;
-        border-radius: 4px;
-        margin: 1px;
-        padding: 0;
-        font-size: 1.14em;
-        height: 1.375em;
-        width: 1.375em;
-        line-height: 0.5em;
-      }
-      .ol-control button:hover {
-        background-color: #f8f8f8;
-      }
-      .ol-layerswitcher-container {
-        position: absolute !important;
-        top: 1em !important;
-        left: 3em !important;
-        z-index: 1000;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 4px;
-        padding: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-      .ol-layerswitcher {
-        position: static !important;
-      }
-      .ol-layerswitcher-panel {
-        position: static !important;
-        display: block !important;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 4px;
-        padding: 5px;
-        max-height: 400px;
-        overflow-y: auto;
-        z-index: 1001;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        min-width: 200px;
-      }
-      .ol-layerswitcher button {
-        display: none !important;
-      }
-      .ol-layerswitcher-panel label {
-        display: block;
-        margin: 5px 0;
-        cursor: pointer;
-      }
-      .ol-layerswitcher-panel input[type="checkbox"] {
-        margin-right: 5px;
-      }
-      .ol-layerswitcher-panel .group {
-        margin-left: 15px;
-      }
-      .ol-layerswitcher-panel .group > label {
-        font-weight: bold;
-      }
+
       .popup-content {
         background: white;
         padding: 10px;
         border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Always-visible LayerSwitcher panel */
+      .ol-layerswitcher {
+        top: 1em;
+        left: 1em;
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        padding: 10px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
     </style>
@@ -109,7 +59,6 @@
         Interactive map showing the development of China's transport networks
         over time.
       </p>
-
       <div id="map"></div>
     </main>
 
@@ -117,7 +66,6 @@
     <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js"></script>
     <script>
-      // Initialize the map
       const map = new ol.Map({
         target: "map",
         layers: [
@@ -127,6 +75,9 @@
               attributions:
                 '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
             }),
+            title: "Base Map",
+            type: "base",
+            visible: true,
           }),
         ],
         view: new ol.View({
@@ -135,7 +86,36 @@
         }),
       });
 
-      // Create layer groups
+      // Create overlay popup
+      const popupElement = document.createElement("div");
+      popupElement.className = "popup-content";
+      document.body.appendChild(popupElement);
+
+      const popup = new ol.Overlay({
+        element: popupElement,
+        positioning: "bottom-center",
+        stopEvent: false,
+      });
+      map.addOverlay(popup);
+
+      map.on("click", function (evt) {
+        const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+        if (feature) {
+          const properties = feature.getProperties();
+          let content = "";
+          for (let key in properties) {
+            if (key !== "geometry" && properties[key]) {
+              content += `<p><strong>${key}:</strong> ${properties[key]}</p>`;
+            }
+          }
+          popup.getElement().innerHTML = content;
+          popup.setPosition(evt.coordinate);
+        } else {
+          popup.setPosition(undefined);
+        }
+      });
+
+      // High-speed railway group
       const highSpeedRailwayGroup = new ol.layer.Group({
         title: "High-Speed Railway",
         layers: [
@@ -147,10 +127,7 @@
               format: new ol.format.GeoJSON(),
             }),
             style: new ol.style.Style({
-              stroke: new ol.style.Stroke({
-                color: "red",
-                width: 2,
-              }),
+              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
             }),
           }),
           new ol.layer.Vector({
@@ -161,15 +138,13 @@
               format: new ol.format.GeoJSON(),
             }),
             style: new ol.style.Style({
-              stroke: new ol.style.Stroke({
-                color: "red",
-                width: 2,
-              }),
+              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
             }),
           }),
         ],
       });
 
+      // Other layers
       const regularRailwayLayer = new ol.layer.Vector({
         title: "Regular Railway",
         visible: false,
@@ -178,10 +153,7 @@
           format: new ol.format.GeoJSON(),
         }),
         style: new ol.style.Style({
-          stroke: new ol.style.Stroke({
-            color: "orange",
-            width: 2,
-          }),
+          stroke: new ol.style.Stroke({ color: "orange", width: 2 }),
         }),
       });
 
@@ -195,13 +167,8 @@
         style: new ol.style.Style({
           image: new ol.style.Circle({
             radius: 5,
-            fill: new ol.style.Fill({
-              color: "red",
-            }),
-            stroke: new ol.style.Stroke({
-              color: "white",
-              width: 2,
-            }),
+            fill: new ol.style.Fill({ color: "red" }),
+            stroke: new ol.style.Stroke({ color: "white", width: 2 }),
           }),
         }),
       });
@@ -214,10 +181,7 @@
           format: new ol.format.GeoJSON(),
         }),
         style: new ol.style.Style({
-          stroke: new ol.style.Stroke({
-            color: "blue",
-            width: 2,
-          }),
+          stroke: new ol.style.Stroke({ color: "blue", width: 2 }),
         }),
       });
 
@@ -229,10 +193,7 @@
           format: new ol.format.GeoJSON(),
         }),
         style: new ol.style.Style({
-          stroke: new ol.style.Stroke({
-            color: "green",
-            width: 2,
-          }),
+          stroke: new ol.style.Stroke({ color: "green", width: 2 }),
         }),
       });
 
@@ -244,14 +205,11 @@
           format: new ol.format.GeoJSON(),
         }),
         style: new ol.style.Style({
-          stroke: new ol.style.Stroke({
-            color: "cyan",
-            width: 2,
-          }),
+          stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
         }),
       });
 
-      // Add all layers to the map
+      // Add layers to map
       map.addLayer(highSpeedRailwayGroup);
       map.addLayer(regularRailwayLayer);
       map.addLayer(railwayStationLayer);
@@ -259,84 +217,14 @@
       map.addLayer(highwayLayer);
       map.addLayer(waterwayLayer);
 
-      // Add popup for features
-      const popup = new ol.Overlay({
-        element: document.createElement("div"),
-        positioning: "bottom-center",
-        stopEvent: false,
-      });
-      map.addOverlay(popup);
-
-      map.on("click", function (evt) {
-        const feature = map.forEachFeatureAtPixel(
-          evt.pixel,
-          function (feature) {
-            return feature;
-          }
-        );
-
-        if (feature) {
-          const properties = feature.getProperties();
-          let content = '<div class="popup-content">';
-          for (let prop in properties) {
-            if (
-              prop !== "geometry" &&
-              properties[prop] !== null &&
-              properties[prop] !== undefined
-            ) {
-              content += `<p><strong>${prop}:</strong> ${properties[prop]}</p>`;
-            }
-          }
-          content += "</div>";
-          popup.getElement().innerHTML = content;
-          popup.setPosition(evt.coordinate);
-        } else {
-          popup.setPosition(undefined);
-        }
-      });
-
-      // Add layer switcher
+      // Layer switcher control - always visible
       const layerSwitcher = new ol.control.LayerSwitcher({
         tipLabel: "Layers",
         groupSelectStyle: "group",
-        activationMode: "click",
+        activationMode: "none", // Always visible
         startActive: true,
-        groupToggleEnter: true,
-        panel: {
-          className: "ol-layerswitcher-panel",
-          position: "right",
-        },
       });
-
-      // Create a custom control container for the layer switcher
-      const layerSwitcherContainer = document.createElement("div");
-      layerSwitcherContainer.className =
-        "ol-control ol-layerswitcher-container";
-      layerSwitcherContainer.style.position = "absolute";
-      layerSwitcherContainer.style.top = "1em";
-      layerSwitcherContainer.style.left = "3em";
-      layerSwitcherContainer.style.zIndex = "1000";
-      layerSwitcherContainer.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-      layerSwitcherContainer.style.borderRadius = "4px";
-      layerSwitcherContainer.style.padding = "8px";
-      layerSwitcherContainer.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
-
-      // Add the layer switcher to the custom container
-      layerSwitcherContainer.appendChild(layerSwitcher.element);
-      map.getViewport().appendChild(layerSwitcherContainer);
-
-      // Force the panel to be visible and remove the toggle button
-      setTimeout(() => {
-        const panel = document.querySelector(".ol-layerswitcher-panel");
-        const button = document.querySelector(".ol-layerswitcher button");
-        if (panel) {
-          panel.style.display = "block";
-          panel.classList.add("active");
-        }
-        if (button) {
-          button.style.display = "none";
-        }
-      }, 100);
+      map.addControl(layerSwitcher);
     </script>
   </body>
 </html>
