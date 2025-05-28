@@ -50,7 +50,6 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
-      /* Layer switcher always visible */
       .ol-layerswitcher {
         top: 1em;
         left: 1em;
@@ -156,20 +155,93 @@
         }),
       });
 
+      const regularRailwayGroup = new ol.layer.Group({
+        title: "Regular Railway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/RegularRailway/RegularRailway2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "orange", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
+      const railwayStationGroup = new ol.layer.Group({
+        title: "Railway Station",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RailwayStations2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({ color: "red" }),
+                stroke: new ol.style.Stroke({ color: "white", width: 2 }),
+              }),
+            }),
+          }),
+        ],
+      });
+
+      const highwayGroup = new ol.layer.Group({
+        title: "Highway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Highway/Highways2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
+      const waterwayGroup = new ol.layer.Group({
+        title: "Waterway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
       map.addLayer(highSpeedRailwayGroup);
       map.addLayer(motorwayLayer);
+      map.addLayer(regularRailwayGroup);
+      map.addLayer(railwayStationGroup);
+      map.addLayer(highwayGroup);
+      map.addLayer(waterwayGroup);
 
-      // Add layer switcher
       const layerSwitcher = new ol.control.LayerSwitcher({
-        activationMode: "click", // default
+        activationMode: "click",
         startActive: true,
         tipLabel: "Layers",
         groupSelectStyle: "group",
       });
-
       map.addControl(layerSwitcher);
 
-      // Force the panel to always show after control is added
       setTimeout(() => {
         const switcherEl = document.querySelector(".ol-layerswitcher");
         if (switcherEl) {
