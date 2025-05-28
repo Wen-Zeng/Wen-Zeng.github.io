@@ -64,9 +64,13 @@
         padding: 5px;
         max-height: 400px;
         overflow-y: auto;
-        z-index: 1000;
+        z-index: 1001;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         min-width: 200px;
+        display: block !important;
+      }
+      .ol-layerswitcher-panel.active {
+        display: block !important;
       }
       .ol-layerswitcher button {
         background-color: #fff;
@@ -332,6 +336,10 @@
         activationMode: "click",
         startActive: false,
         groupToggleEnter: true,
+        panel: {
+          className: "ol-layerswitcher-panel",
+          position: "right",
+        },
       });
 
       // Create a custom control container for the layer switcher
