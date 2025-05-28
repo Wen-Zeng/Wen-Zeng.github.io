@@ -334,7 +334,7 @@
         tipLabel: "Layers",
         groupSelectStyle: "group",
         activationMode: "click",
-        startActive: false,
+        startActive: true,
         groupToggleEnter: true,
         panel: {
           className: "ol-layerswitcher-panel",
@@ -358,6 +358,15 @@
       // Add the layer switcher to the custom container
       layerSwitcherContainer.appendChild(layerSwitcher.element);
       map.getViewport().appendChild(layerSwitcherContainer);
+
+      // Force the panel to be visible
+      setTimeout(() => {
+        const panel = document.querySelector(".ol-layerswitcher-panel");
+        if (panel) {
+          panel.style.display = "block";
+          panel.classList.add("active");
+        }
+      }, 100);
 
       // Add click handler for group labels
       document.addEventListener("click", function (e) {
