@@ -292,6 +292,35 @@
           switcherEl.style.display = "block";
         }
       }, 100);
+
+      // ✅ Add popup overlay
+      const popupElement = document.createElement("div");
+      popupElement.className = "popup-content";
+      document.body.appendChild(popupElement);
+
+      const popup = new ol.Overlay({
+        element: popupElement,
+        positioning: "bottom-center",
+        stopEvent: false,
+      });
+      map.addOverlay(popup);
+
+      map.on("click", function (evt) {
+        const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+        if (feature) {
+          const props = feature.getProperties();
+          let html = "";
+          for (let key in props) {
+            if (key !== "geometry") {
+              html += `<strong>${key}</strong>: ${props[key]}<br>`;
+            }
+          }
+          popupElement.innerHTML = html;
+          popup.setPosition(evt.coordinate);
+        } else {
+          popup.setPosition(undefined);
+        }
+      });
     </script>
   </body>
 </html>
