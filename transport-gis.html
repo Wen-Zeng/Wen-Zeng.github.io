@@ -185,136 +185,51 @@
         ],
       });
 
-      const railwayStationGroup = new ol.layer.Group({
-        title: "Railway Station",
+      // Add Railway Improved Group
+      const railwayImprovedGroup = new ol.layer.Group({
+        title: "Railway Improved",
         fold: "open",
         layers: [],
       });
-      for (let year = 1995; year <= 2020; year++) {
-        railwayStationGroup.getLayers().push(
+
+      const improvedYears = [1997, 1998, 2000, 2001, 2004, 2007];
+      improvedYears.forEach((year) => {
+        railwayImprovedGroup.getLayers().push(
           new ol.layer.Vector({
-            title: year.toString(),
+            title: `Railway Improved ${year}`,
             visible: false,
             source: new ol.source.Vector({
-              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RailwayStations${year}.geojson`,
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayImprove/RailImprove${year}.geojson`,
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "purple", width: 2 }),
+            }),
+          })
+        );
+        railwayImprovedGroup.getLayers().push(
+          new ol.layer.Vector({
+            title: `Station Improved ${year}`,
+            visible: false,
+            source: new ol.source.Vector({
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayImprove/RailImproveStation${year}.geojson`,
               format: new ol.format.GeoJSON(),
             }),
             style: new ol.style.Style({
               image: new ol.style.Circle({
                 radius: 5,
-                fill: new ol.style.Fill({ color: "red" }),
-                stroke: new ol.style.Stroke({ color: "white", width: 2 }),
+                fill: new ol.style.Fill({ color: "magenta" }),
+                stroke: new ol.style.Stroke({ color: "white", width: 1 }),
               }),
             }),
           })
         );
-      }
-
-      const highSpeedRailwayStationGroup = new ol.layer.Group({
-        title: "High-speed Railway Station",
-        fold: "open",
-        layers: [],
-      });
-      for (let year = 2003; year <= 2020; year++) {
-        highSpeedRailwayStationGroup.getLayers().push(
-          new ol.layer.Vector({
-            title: year.toString(),
-            visible: false,
-            source: new ol.source.Vector({
-              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/HighSpeedRailwayStation${year}.geojson`,
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              image: new ol.style.Circle({
-                radius: 5,
-                fill: new ol.style.Fill({ color: "yellow" }),
-                stroke: new ol.style.Stroke({ color: "black", width: 1 }),
-              }),
-            }),
-          })
-        );
-      }
-
-      const regularRailwayStationGroup = new ol.layer.Group({
-        title: "Regular Railway Station",
-        fold: "open",
-        layers: [],
-      });
-      for (let year = 1995; year <= 2020; year++) {
-        regularRailwayStationGroup.getLayers().push(
-          new ol.layer.Vector({
-            title: year.toString(),
-            visible: false,
-            source: new ol.source.Vector({
-              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RegularRailwayStation${year}.geojson`,
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              image: new ol.style.Circle({
-                radius: 5,
-                fill: new ol.style.Fill({ color: "lightblue" }),
-                stroke: new ol.style.Stroke({ color: "darkblue", width: 1 }),
-              }),
-            }),
-          })
-        );
-      }
-
-      const highwayGroup = new ol.layer.Group({
-        title: "Highway",
-        fold: "open",
-        layers: [
-          new ol.layer.Vector({
-            title: "1993",
-            visible: false,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Highway/Highways1993.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "green", width: 2 }),
-            }),
-          }),
-          new ol.layer.Vector({
-            title: "2020",
-            visible: false,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Highway/Highways2020.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "green", width: 2 }),
-            }),
-          }),
-        ],
-      });
-
-      const waterwayGroup = new ol.layer.Group({
-        title: "Waterway",
-        fold: "open",
-        layers: [
-          new ol.layer.Vector({
-            title: "2020",
-            visible: false,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
-            }),
-          }),
-        ],
       });
 
       map.addLayer(highSpeedRailwayGroup);
       map.addLayer(motorwayGroup);
       map.addLayer(regularRailwayGroup);
-      map.addLayer(railwayStationGroup);
-      map.addLayer(highSpeedRailwayStationGroup);
-      map.addLayer(regularRailwayStationGroup);
-      map.addLayer(highwayGroup);
-      map.addLayer(waterwayGroup);
+      map.addLayer(railwayImprovedGroup);
 
       const layerSwitcher = new ol.control.LayerSwitcher({
         activationMode: "click",
