@@ -381,35 +381,46 @@
         }
       }, 100);
 
-      function updateGroupCheckboxes() {
-        const checkboxes = document.querySelectorAll(
-          '.panel > ul > li.group > label > input[type="checkbox"]'
-        );
-        checkboxes.forEach((groupCheckbox) => {
-          const groupLi = groupCheckbox.closest("li.group");
-          const layerCheckboxes = groupLi.querySelectorAll(
-            'ul li.layer input[type="checkbox"]'
+      function syncGroupCheckboxes() {
+        const groups = map
+          .getLayers()
+          .getArray()
+          .filter((layer) => layer instanceof ol.layer.Group);
+
+        groups.forEach((group) => {
+          const groupTitle = group.get("title");
+          const groupLayers = group.getLayers().getArray();
+          const anyVisible = groupLayers.some((layer) => layer.getVisible());
+
+          // Find corresponding checkbox in the DOM
+          const labelElements = document.querySelectorAll(
+            ".ol-layerswitcher label"
           );
 
-          const anyChecked = Array.from(layerCheckboxes).some(
-            (cb) => cb.checked
-          );
-          groupCheckbox.checked = anyChecked;
-          groupCheckbox.indeterminate =
-            !anyChecked &&
-            Array.from(layerCheckboxes).some((cb) => cb.indeterminate);
+          labelElements.forEach((label) => {
+            if (label.textContent.trim() === groupTitle) {
+              const checkbox = label.querySelector('input[type="checkbox"]');
+              if (checkbox) {
+                checkbox.checked = anyVisible;
+              }
+            }
+          });
         });
       }
 
-      // Run on map load
-      setTimeout(updateGroupCheckboxes, 500);
+      // Initial sync after layer switcher is loaded
+      setTimeout(syncGroupCheckboxes, 500);
 
-      // Re-run every time a checkbox is changed
-      document
-        .querySelector(".ol-layerswitcher")
-        .addEventListener("change", () => {
-          setTimeout(updateGroupCheckboxes, 100);
-        });
+      // Sync when any sublayer visibility changes
+      map.getLayers().forEach((group) => {
+        if (group instanceof ol.layer.Group) {
+          group.getLayers().forEach((layer) => {
+            layer.on("change:visible", () => {
+              syncGroupCheckboxes();
+            });
+          });
+        }
+      });
 
       const popupElement = document.createElement("div");
       popupElement.className = "popup-content";
