@@ -279,7 +279,10 @@
             style: new ol.style.Style({
               stroke: new ol.style.Stroke({ color: "purple", width: 2 }),
             }),
-          }),
+          })
+        );
+
+        railwayImprovedGroup.getLayers().push(
           new ol.layer.Vector({
             title: `Station Improved ${year}`,
             visible: false,
