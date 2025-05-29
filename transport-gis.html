@@ -381,6 +381,36 @@
         }
       }, 100);
 
+      function updateGroupCheckboxes() {
+        const checkboxes = document.querySelectorAll(
+          '.panel > ul > li.group > label > input[type="checkbox"]'
+        );
+        checkboxes.forEach((groupCheckbox) => {
+          const groupLi = groupCheckbox.closest("li.group");
+          const layerCheckboxes = groupLi.querySelectorAll(
+            'ul li.layer input[type="checkbox"]'
+          );
+
+          const anyChecked = Array.from(layerCheckboxes).some(
+            (cb) => cb.checked
+          );
+          groupCheckbox.checked = anyChecked;
+          groupCheckbox.indeterminate =
+            !anyChecked &&
+            Array.from(layerCheckboxes).some((cb) => cb.indeterminate);
+        });
+      }
+
+      // Run on map load
+      setTimeout(updateGroupCheckboxes, 500);
+
+      // Re-run every time a checkbox is changed
+      document
+        .querySelector(".ol-layerswitcher")
+        .addEventListener("change", () => {
+          setTimeout(updateGroupCheckboxes, 100);
+        });
+
       const popupElement = document.createElement("div");
       popupElement.className = "popup-content";
       document.body.appendChild(popupElement);

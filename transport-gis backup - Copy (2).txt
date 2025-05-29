@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transport GIS - Always Visible Layer Control</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+      }
+
+      #map {
+        width: 100%;
+        height: 90vh;
+      }
+
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 10px;
+        background: #eee;
+        display: flex;
+      }
+
+      nav ul li {
+        margin-right: 20px;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: #333;
+      }
+
+      .popup-content {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .ol-layerswitcher {
+        top: 1em;
+        left: 1em;
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .ol-layerswitcher.shown {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      .ol-layerswitcher .panel {
+        display: block !important;
+      }
+
+      .ol-layerswitcher button {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="transport-gis.html">Transport GIS</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <div id="map"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js"></script>
+    <script>
+      const map = new ol.Map({
+        target: "map",
+        view: new ol.View({
+          center: ol.proj.fromLonLat([104.1954, 35.8617]),
+          zoom: 4,
+        }),
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.XYZ({
+              url: "https://{a-d}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+              attributions:
+                '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+            }),
+            title: "Base Map",
+            type: "base",
+            visible: true,
+          }),
+        ],
+      });
+
+      const highSpeedRailwayGroup = new ol.layer.Group({
+        title: "High-Speed Railway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: true,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
+            }),
+          }),
+          new ol.layer.Vector({
+            title: "2003",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/HighSpeedRailway/HighSpeedRailway2003.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
+      const motorwayLayer = new ol.layer.Vector({
+        title: "Motorway",
+        visible: false,
+        source: new ol.source.Vector({
+          url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Motorway/Motorway2020.geojson",
+          format: new ol.format.GeoJSON(),
+        }),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({ color: "blue", width: 2 }),
+        }),
+      });
+
+      const regularRailwayGroup = new ol.layer.Group({
+        title: "Regular Railway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/RegularRailway/RegularRailway2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "orange", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
+      const railwayStationGroup = new ol.layer.Group({
+        title: "Railway Station",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RailwayStations2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({ color: "red" }),
+                stroke: new ol.style.Stroke({ color: "white", width: 2 }),
+              }),
+            }),
+          }),
+        ],
+      });
+
+      const highwayGroup = new ol.layer.Group({
+        title: "Highway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Highway/Highways2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
+      const waterwayGroup = new ol.layer.Group({
+        title: "Waterway",
+        layers: [
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
+            }),
+          }),
+        ],
+      });
+
+      map.addLayer(highSpeedRailwayGroup);
+      map.addLayer(motorwayLayer);
+      map.addLayer(regularRailwayGroup);
+      map.addLayer(railwayStationGroup);
+      map.addLayer(highwayGroup);
+      map.addLayer(waterwayGroup);
+
+      const layerSwitcher = new ol.control.LayerSwitcher({
+        activationMode: "click",
+        startActive: true,
+        tipLabel: "Layers",
+        groupSelectStyle: "group",
+      });
+      map.addControl(layerSwitcher);
+
+      setTimeout(() => {
+        const switcherEl = document.querySelector(".ol-layerswitcher");
+        if (switcherEl) {
+          switcherEl.classList.add("shown");
+          switcherEl.style.opacity = "1";
+          switcherEl.style.visibility = "visible";
+          switcherEl.style.display = "block";
+        }
+      }, 100);
+    </script>
+  </body>
+</html>
