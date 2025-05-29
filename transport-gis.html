@@ -137,22 +137,50 @@
         );
       }
 
-      const motorwayLayer = new ol.layer.Vector({
+      const motorwayGroup = new ol.layer.Group({
         title: "Motorway",
-        visible: false,
-        source: new ol.source.Vector({
-          url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Motorway/Motorway2020.geojson",
-          format: new ol.format.GeoJSON(),
-        }),
-        style: new ol.style.Style({
-          stroke: new ol.style.Stroke({ color: "blue", width: 2 }),
-        }),
+        fold: "open",
+        layers: [
+          new ol.layer.Vector({
+            title: "1993",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Motorway/Motorway1993.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "blue", width: 2 }),
+            }),
+          }),
+          new ol.layer.Vector({
+            title: "2020",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Motorway/Motorway2020.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "blue", width: 2 }),
+            }),
+          }),
+        ],
       });
 
       const regularRailwayGroup = new ol.layer.Group({
         title: "Regular Railway",
         fold: "open",
         layers: [
+          new ol.layer.Vector({
+            title: "1995",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/RegularRailway/RegularRailway1995.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "orange", width: 2 }),
+            }),
+          }),
           new ol.layer.Vector({
             title: "2020",
             visible: false,
@@ -226,7 +254,7 @@
       });
 
       map.addLayer(highSpeedRailwayGroup);
-      map.addLayer(motorwayLayer);
+      map.addLayer(motorwayGroup);
       map.addLayer(regularRailwayGroup);
       map.addLayer(railwayStationGroup);
       map.addLayer(highwayGroup);
