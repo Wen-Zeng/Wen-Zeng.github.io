@@ -198,12 +198,16 @@
       const railwayStationGroup = new ol.layer.Group({
         title: "Railway Station",
         fold: "open",
-        layers: [
+        layers: [],
+      });
+
+      for (let year = 1995; year <= 2020; year++) {
+        railwayStationGroup.getLayers().push(
           new ol.layer.Vector({
-            title: "2020",
+            title: year.toString(),
             visible: false,
             source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RailwayStations2020.geojson",
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RailwayStations${year}.geojson`,
               format: new ol.format.GeoJSON(),
             }),
             style: new ol.style.Style({
@@ -213,14 +217,25 @@
                 stroke: new ol.style.Stroke({ color: "white", width: 2 }),
               }),
             }),
-          }),
-        ],
-      });
+          })
+        );
+      }
 
       const highwayGroup = new ol.layer.Group({
         title: "Highway",
         fold: "open",
         layers: [
+          new ol.layer.Vector({
+            title: "1993",
+            visible: false,
+            source: new ol.source.Vector({
+              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Highway/Highways1993.geojson",
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "green", width: 2 }),
+            }),
+          }),
           new ol.layer.Vector({
             title: "2020",
             visible: false,
