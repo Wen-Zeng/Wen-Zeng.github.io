@@ -117,32 +117,25 @@
 
       const highSpeedRailwayGroup = new ol.layer.Group({
         title: "High-Speed Railway",
-        layers: [
-          new ol.layer.Vector({
-            title: "2020",
-            visible: true,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/HighSpeedRailway/HighSpeedRailway2020.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
-            }),
-          }),
-          new ol.layer.Vector({
-            title: "2003",
-            visible: false,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/HighSpeedRailway/HighSpeedRailway2003.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
-            }),
-          }),
-        ],
         fold: "open",
+        layers: [],
       });
+
+      for (let year = 2003; year <= 2020; year++) {
+        highSpeedRailwayGroup.getLayers().push(
+          new ol.layer.Vector({
+            title: year.toString(),
+            visible: year === 2020,
+            source: new ol.source.Vector({
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/HighSpeedRailway/HighSpeedRailway${year}.geojson`,
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "red", width: 2 }),
+            }),
+          })
+        );
+      }
 
       const motorwayLayer = new ol.layer.Vector({
         title: "Motorway",
@@ -158,6 +151,7 @@
 
       const regularRailwayGroup = new ol.layer.Group({
         title: "Regular Railway",
+        fold: "open",
         layers: [
           new ol.layer.Vector({
             title: "2020",
@@ -171,11 +165,11 @@
             }),
           }),
         ],
-        fold: "open",
       });
 
       const railwayStationGroup = new ol.layer.Group({
         title: "Railway Station",
+        fold: "open",
         layers: [
           new ol.layer.Vector({
             title: "2020",
@@ -193,11 +187,11 @@
             }),
           }),
         ],
-        fold: "open",
       });
 
       const highwayGroup = new ol.layer.Group({
         title: "Highway",
+        fold: "open",
         layers: [
           new ol.layer.Vector({
             title: "2020",
@@ -211,11 +205,11 @@
             }),
           }),
         ],
-        fold: "open",
       });
 
       const waterwayGroup = new ol.layer.Group({
         title: "Waterway",
+        fold: "open",
         layers: [
           new ol.layer.Vector({
             title: "2020",
@@ -229,7 +223,6 @@
             }),
           }),
         ],
-        fold: "open",
       });
 
       map.addLayer(highSpeedRailwayGroup);
