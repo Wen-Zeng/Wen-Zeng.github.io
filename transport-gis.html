@@ -20,12 +20,10 @@
         height: 100%;
         font-family: Arial, sans-serif;
       }
-
       #map {
         width: 100%;
         height: 90vh;
       }
-
       nav ul {
         list-style: none;
         margin: 0;
@@ -33,23 +31,19 @@
         background: #eee;
         display: flex;
       }
-
       nav ul li {
         margin-right: 20px;
       }
-
       nav ul li a {
         text-decoration: none;
         color: #333;
       }
-
       .popup-content {
         background: white;
         padding: 10px;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
-
       .ol-layerswitcher {
         top: 1em;
         left: 1em;
@@ -60,17 +54,14 @@
         padding: 10px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
-
       .ol-layerswitcher.shown {
         display: block !important;
         opacity: 1 !important;
         visibility: visible !important;
       }
-
       .ol-layerswitcher .panel {
         display: block !important;
       }
-
       .ol-layerswitcher button {
         display: none !important;
       }
@@ -120,7 +111,6 @@
         fold: "open",
         layers: [],
       });
-
       for (let year = 2003; year <= 2020; year++) {
         highSpeedRailwayGroup.getLayers().push(
           new ol.layer.Vector({
@@ -200,7 +190,6 @@
         fold: "open",
         layers: [],
       });
-
       for (let year = 1995; year <= 2020; year++) {
         railwayStationGroup.getLayers().push(
           new ol.layer.Vector({
@@ -215,6 +204,56 @@
                 radius: 5,
                 fill: new ol.style.Fill({ color: "red" }),
                 stroke: new ol.style.Stroke({ color: "white", width: 2 }),
+              }),
+            }),
+          })
+        );
+      }
+
+      const highSpeedRailwayStationGroup = new ol.layer.Group({
+        title: "High-speed Railway Station",
+        fold: "open",
+        layers: [],
+      });
+      for (let year = 2003; year <= 2020; year++) {
+        highSpeedRailwayStationGroup.getLayers().push(
+          new ol.layer.Vector({
+            title: year.toString(),
+            visible: false,
+            source: new ol.source.Vector({
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/HighSpeedRailwayStation${year}.geojson`,
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({ color: "yellow" }),
+                stroke: new ol.style.Stroke({ color: "black", width: 1 }),
+              }),
+            }),
+          })
+        );
+      }
+
+      const regularRailwayStationGroup = new ol.layer.Group({
+        title: "Regular Railway Station",
+        fold: "open",
+        layers: [],
+      });
+      for (let year = 1995; year <= 2020; year++) {
+        regularRailwayStationGroup.getLayers().push(
+          new ol.layer.Vector({
+            title: year.toString(),
+            visible: false,
+            source: new ol.source.Vector({
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayStation/RegularRailwayStation${year}.geojson`,
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({ color: "lightblue" }),
+                stroke: new ol.style.Stroke({ color: "darkblue", width: 1 }),
               }),
             }),
           })
@@ -272,6 +311,8 @@
       map.addLayer(motorwayGroup);
       map.addLayer(regularRailwayGroup);
       map.addLayer(railwayStationGroup);
+      map.addLayer(highSpeedRailwayStationGroup);
+      map.addLayer(regularRailwayStationGroup);
       map.addLayer(highwayGroup);
       map.addLayer(waterwayGroup);
 
@@ -293,18 +334,15 @@
         }
       }, 100);
 
-      // ✅ Add popup overlay
       const popupElement = document.createElement("div");
       popupElement.className = "popup-content";
       document.body.appendChild(popupElement);
-
       const popup = new ol.Overlay({
         element: popupElement,
         positioning: "bottom-center",
         stopEvent: false,
       });
       map.addOverlay(popup);
-
       map.on("click", function (evt) {
         const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
         if (feature) {
