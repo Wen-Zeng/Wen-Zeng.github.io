@@ -381,24 +381,26 @@
         }
       }, 100);
 
-      function syncLayerSwitcher() {
+      setTimeout(syncGroupVisibility, 200);
+
+      function syncGroupVisibility() {
         map.getLayers().forEach((group) => {
           if (group instanceof ol.layer.Group) {
             const anyVisible = group
               .getLayers()
               .getArray()
               .some((layer) => layer.getVisible());
-            group.setVisible(anyVisible); // this controls the group checkbox
+            group.setVisible(anyVisible);
           }
         });
-        layerSwitcher.renderPanel(); // force re-render
+        layerSwitcher.renderPanel();
       }
 
       map.getLayers().forEach((group) => {
         if (group instanceof ol.layer.Group) {
           group.getLayers().forEach((layer) => {
             layer.on("change:visible", () => {
-              syncLayerSwitcher();
+              syncGroupVisibility();
             });
           });
         }
