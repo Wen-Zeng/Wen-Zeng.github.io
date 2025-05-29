@@ -381,42 +381,15 @@
         }
       }, 100);
 
-      function syncGroupCheckboxes() {
-        const groups = map
-          .getLayers()
-          .getArray()
-          .filter((layer) => layer instanceof ol.layer.Group);
-
-        groups.forEach((group) => {
-          const groupTitle = group.get("title");
-          const groupLayers = group.getLayers().getArray();
-          const anyVisible = groupLayers.some((layer) => layer.getVisible());
-
-          // Find corresponding checkbox in the DOM
-          const labelElements = document.querySelectorAll(
-            ".ol-layerswitcher label"
-          );
-
-          labelElements.forEach((label) => {
-            if (label.textContent.trim() === groupTitle) {
-              const checkbox = label.querySelector('input[type="checkbox"]');
-              if (checkbox) {
-                checkbox.checked = anyVisible;
-              }
-            }
-          });
-        });
+      function syncLayerSwitcher() {
+        layerSwitcher.renderPanel();
       }
 
-      // Initial sync after layer switcher is loaded
-      setTimeout(syncGroupCheckboxes, 500);
-
-      // Sync when any sublayer visibility changes
       map.getLayers().forEach((group) => {
         if (group instanceof ol.layer.Group) {
           group.getLayers().forEach((layer) => {
             layer.on("change:visible", () => {
-              syncGroupCheckboxes();
+              syncLayerSwitcher();
             });
           });
         }
