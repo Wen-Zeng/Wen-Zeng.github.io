@@ -268,6 +268,23 @@
 
       const years = [1997, 1998, 2000, 2001, 2004, 2007];
 
+      // Then add Railway Improved layers
+      years.forEach((year) => {
+        railwayImprovedGroup.getLayers().push(
+          new ol.layer.Vector({
+            title: `Railway Improved ${year}`,
+            visible: false,
+            source: new ol.source.Vector({
+              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayImprove/RailImprove${year}.geojson`,
+              format: new ol.format.GeoJSON(),
+            }),
+            style: new ol.style.Style({
+              stroke: new ol.style.Stroke({ color: "purple", width: 2 }),
+            }),
+          })
+        );
+      });
+
       // First add Station Improved layers
       years.forEach((year) => {
         railwayImprovedGroup.getLayers().push(
@@ -284,23 +301,6 @@
                 fill: new ol.style.Fill({ color: "magenta" }),
                 stroke: new ol.style.Stroke({ color: "white", width: 1 }),
               }),
-            }),
-          })
-        );
-      });
-
-      // Then add Railway Improved layers
-      years.forEach((year) => {
-        railwayImprovedGroup.getLayers().push(
-          new ol.layer.Vector({
-            title: `Railway Improved ${year}`,
-            visible: false,
-            source: new ol.source.Vector({
-              url: `https://transport-gis-backend.onrender.com/api/geojson/Data/RailwayImprove/RailImprove${year}.geojson`,
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "purple", width: 2 }),
             }),
           })
         );
