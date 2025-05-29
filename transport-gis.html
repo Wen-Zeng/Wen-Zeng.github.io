@@ -382,7 +382,16 @@
       }, 100);
 
       function syncLayerSwitcher() {
-        layerSwitcher.renderPanel();
+        map.getLayers().forEach((group) => {
+          if (group instanceof ol.layer.Group) {
+            const anyVisible = group
+              .getLayers()
+              .getArray()
+              .some((layer) => layer.getVisible());
+            group.setVisible(anyVisible); // this controls the group checkbox
+          }
+        });
+        layerSwitcher.renderPanel(); // force re-render
       }
 
       map.getLayers().forEach((group) => {
