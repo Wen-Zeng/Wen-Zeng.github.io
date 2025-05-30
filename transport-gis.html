@@ -335,25 +335,20 @@
         ],
       });
 
-      const waterwayGroup = new ol.layer.Group({
+      const waterwayLayer = new ol.layer.Vector({
         title: "Waterway",
-        fold: "close",
-        layers: [
-          new ol.layer.Vector({
-            title: "2020",
-            visible: false,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
-            }),
-          }),
-        ],
+        visible: false,
+        source: new ol.source.Vector({
+          url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
+          format: new ol.format.GeoJSON(),
+        }),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
+        }),
       });
+      map.addLayer(waterwayLayer);
 
-      map.addLayer(waterwayGroup);
+      map.addLayer(waterwayLayer);
       map.addLayer(highwayGroup);
       map.addLayer(motorwayGroup);
       map.addLayer(railwayImprovedGroup);
