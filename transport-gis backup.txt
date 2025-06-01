@@ -335,33 +335,27 @@
         ],
       });
 
-      const waterwayGroup = new ol.layer.Group({
+      const waterwayLayer = new ol.layer.Vector({
         title: "Waterway",
-        fold: "close",
-        layers: [
-          new ol.layer.Vector({
-            title: "2020",
-            visible: false,
-            source: new ol.source.Vector({
-              url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
-              format: new ol.format.GeoJSON(),
-            }),
-            style: new ol.style.Style({
-              stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
-            }),
-          }),
-        ],
+        visible: false,
+        source: new ol.source.Vector({
+          url: "https://transport-gis-backend.onrender.com/api/geojson/Data/Waterway/Waterway.geojson",
+          format: new ol.format.GeoJSON(),
+        }),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({ color: "cyan", width: 2 }),
+        }),
       });
 
-      map.addLayer(highSpeedRailwayGroup);
-      map.addLayer(motorwayGroup);
-      map.addLayer(regularRailwayGroup);
-      map.addLayer(railwayStationGroup);
-      map.addLayer(highSpeedRailwayStationGroup);
-      map.addLayer(regularRailwayStationGroup);
-      map.addLayer(railwayImprovedGroup);
+      map.addLayer(waterwayLayer);
       map.addLayer(highwayGroup);
-      map.addLayer(waterwayGroup);
+      map.addLayer(motorwayGroup);
+      map.addLayer(railwayImprovedGroup);
+      map.addLayer(regularRailwayGroup);
+      map.addLayer(highSpeedRailwayGroup);
+      map.addLayer(railwayStationGroup);
+      map.addLayer(regularRailwayStationGroup);
+      map.addLayer(highSpeedRailwayStationGroup);
 
       const layerSwitcher = new ol.control.LayerSwitcher({
         activationMode: "click",
@@ -380,6 +374,31 @@
           switcherEl.style.display = "block";
         }
       }, 100);
+
+      setTimeout(syncGroupVisibility, 200);
+
+      function syncGroupVisibility() {
+        map.getLayers().forEach((group) => {
+          if (group instanceof ol.layer.Group) {
+            const anyVisible = group
+              .getLayers()
+              .getArray()
+              .some((layer) => layer.getVisible());
+            group.setVisible(anyVisible);
+          }
+        });
+        layerSwitcher.renderPanel();
+      }
+
+      map.getLayers().forEach((group) => {
+        if (group instanceof ol.layer.Group) {
+          group.getLayers().forEach((layer) => {
+            layer.on("change:visible", () => {
+              syncGroupVisibility();
+            });
+          });
+        }
+      });
 
       const popupElement = document.createElement("div");
       popupElement.className = "popup-content";
