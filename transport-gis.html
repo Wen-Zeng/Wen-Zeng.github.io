@@ -65,6 +65,23 @@
       .ol-layerswitcher button {
         display: none !important;
       }
+      .reset-button {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.2s;
+      }
+      .reset-button:hover {
+        background-color: rgba(255, 255, 255, 1);
+      }
     </style>
   </head>
   <body>
@@ -80,7 +97,9 @@
     </nav>
 
     <main>
-      <div id="map"></div>
+      <div id="map">
+        <button class="reset-button" id="resetView">Reset View</button>
+      </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
@@ -424,6 +443,16 @@
         } else {
           popup.setPosition(undefined);
         }
+      });
+
+      // Add reset view functionality
+      const resetButton = document.getElementById("resetView");
+      resetButton.addEventListener("click", function () {
+        map.getView().animate({
+          center: ol.proj.fromLonLat([104.1954, 35.8617]),
+          zoom: 4,
+          duration: 1000,
+        });
       });
     </script>
   </body>
