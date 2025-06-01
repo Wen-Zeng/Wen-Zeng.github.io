@@ -23,6 +23,7 @@
       #map {
         width: 100%;
         height: 80vh;
+        position: relative;
       }
       nav ul {
         list-style: none;
@@ -460,6 +461,20 @@
       });
       map.addControl(layerSwitcher);
 
+      // Add reset view functionality
+      const resetButton = document.createElement("button");
+      resetButton.className = "reset-button";
+      resetButton.title = "Reset View";
+      resetButton.innerHTML = '<span class="reset-icon"></span>';
+      resetButton.addEventListener("click", function () {
+        map.getView().animate({
+          center: ol.proj.fromLonLat([104.1954, 35.8617]),
+          zoom: 4,
+          duration: 1000,
+        });
+      });
+      map.getViewport().appendChild(resetButton);
+
       setTimeout(() => {
         const switcherEl = document.querySelector(".ol-layerswitcher");
         if (switcherEl) {
@@ -519,16 +534,6 @@
         } else {
           popup.setPosition(undefined);
         }
-      });
-
-      // Add reset view functionality
-      const resetButton = document.getElementById("resetView");
-      resetButton.addEventListener("click", function () {
-        map.getView().animate({
-          center: ol.proj.fromLonLat([104.1954, 35.8617]),
-          zoom: 4,
-          duration: 1000,
-        });
       });
     </script>
   </body>
