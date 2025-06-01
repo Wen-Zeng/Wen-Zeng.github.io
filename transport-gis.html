@@ -38,6 +38,29 @@
         text-decoration: none;
         color: #333;
       }
+      .map-description {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+      .map-description h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      .map-description p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #444;
+        margin-bottom: 15px;
+      }
+      .map-description a {
+        color: #0066cc;
+        text-decoration: none;
+      }
+      .map-description a:hover {
+        text-decoration: underline;
+      }
       .popup-content {
         background: white;
         padding: 10px;
@@ -107,6 +130,36 @@
     </nav>
 
     <main>
+      <div class="map-description">
+        <h1>
+          A Comprehensive GIS Database of China's Land Surface Transport Network
+        </h1>
+        <p>
+          We have developed a comprehensive GIS database of China's land surface
+          transport network. This includes data on high-speed railways
+          (2003–2020), traditional railways (1995–2020), modern motorways
+          (1993–2020), national highways (1993, 2013–2020), and waterways.
+        </p>
+        <p>
+          The China Surface Transport System Database is freely accessible.
+          Users of the database should cite the following source:
+        </p>
+        <p>
+          Davis, Steven J., Meijun Qian, and Wen Zeng (2025a). "A Comprehensive
+          GIS Dataset for China's Surface Transport System with Implications for
+          Transport and Socionomics Research," working paper, Stanford
+          University.
+        </p>
+        <p>
+          Technical details of the dataset are available here:<br />
+          <a href="#">Technical Documentation – February 2025</a>
+        </p>
+        <p>
+          For more information, please contact:<br />
+          <a href="mailto:wen.zeng.001@gmail.com">wen.zeng.001@gmail.com</a> or
+          <a href="mailto:meijunqian@gmail.com">meijunqian@gmail.com</a>
+        </p>
+      </div>
       <div id="map">
         <button class="reset-button" id="resetView" title="Reset View">
           <span class="reset-icon"></span>
