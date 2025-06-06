@@ -351,7 +351,7 @@ footer {
 }
 
 .job {
-    margin-bottom: 1em;
+    margin-bottom: 0.6em;
 }
 
 .job:last-child {
@@ -359,12 +359,12 @@ footer {
 }
 
 .job h3 {
-    margin: 0 0 0.2em 0;
+    margin: 0 0 0.15em 0;
     color: #333;
 }
 
 .job .company {
-    margin: 0 0 0.1em 0;
+    margin: 0 0 0.08em 0;
     color: #666;
 }
 
