@@ -54,13 +54,14 @@
           <div class="section-block">
             <h2>Professional Summary</h2>
             <p>
-              Data and policy analyst and researcher with a doctoral degree and extensive
+              Data and policy analyst with a doctoral degree and extensive
               experience delivering complex data analysis, forecasting models,
-              and reporting systems across economics, health and education sectors. Proven
-              track record of high-quality data analysis and publication, managing various
+              and reporting systems across health and education sectors. Proven
+              track record of high-quality data analysis, managing various
               datasets, applying governance frameworks, and building forecasting
               tools that support evidence-based service planning. Technical
-              expertise in R, SQL, Power BI (DAX), FME, and Python.
+              expertise in R, SQL, Power BI (DAX), FME, and Python, with a
+              strong commitment to ACTPS values and data privacy compliance.
             </p>
           </div>
 
@@ -71,6 +72,31 @@
               <h3>Data and Policy Analyst</h3>
               <p class="company">Skills Canberra, ACT Government</p>
               <p class="duration">Nov 2023 – Present</p>
+              <ul>
+                <li>
+                  Lead data analysis and reporting for VET programs; manage
+                  sensitive AVETARS data in compliance with ACT/national
+                  governance frameworks.
+                </li>
+                <li>
+                  Delivered "CBR – Futures" project for skills prioritisation
+                  and expenditure forecasting, integrating R, SQL, FME, and
+                  Power BI to automate reporting and provide dynamic scenario
+                  analysis.
+                </li>
+                <li>
+                  Implemented robust data pipelines and validation processes,
+                  improving data accuracy and reducing manual reporting time.
+                </li>
+                <li>
+                  Deliver quarterly Federal Government reports and liaise with
+                  CIT staff, ensuring timely, precise submissions.
+                </li>
+                <li>
+                  Prepare technical documentation and present findings to
+                  executives, translating complex data into actionable insights.
+                </li>
+              </ul>
             </div>
 
             <div class="job">
@@ -79,24 +105,86 @@
                 Australian Institute of Health and Welfare (AIHW)
               </p>
               <p class="duration">Oct 2022 – Oct 2023</p>
+              <ul>
+                <li>
+                  Contributed to national health dashboards using Power BI and
+                  ArcGIS, including the Youth Self-Harm Atlas, Asthma
+                  Hospitalisation reports, and Alcohol and Drug Treatment
+                  dashboards.
+                </li>
+                <li>
+                  Applied metadata management, compliance checks, and privacy
+                  protocols to ensure governance alignment.
+                </li>
+                <li>
+                  Applied statistical and spatial methods to inform public
+                  health reporting and government priorities.
+                </li>
+              </ul>
             </div>
 
             <div class="job">
               <h3>Postdoctoral Research Fellow</h3>
               <p class="company">Australian National University (ANU)</p>
               <p class="duration">Sep 2019 – Sep 2022</p>
+              <ul>
+                <li>
+                  Managed a large-scale data project on transport infrastructure
+                  and economic development.
+                </li>
+                <li>
+                  Conducted advanced statistical analysis and regression
+                  modelling in R (RStudio) and Stata.
+                </li>
+                <li>
+                  Developed a large transport network database to be archived by
+                  the University of Chicago.
+                </li>
+              </ul>
             </div>
 
             <div class="job">
               <h3>Postdoctoral Research Fellow</h3>
               <p class="company">University of Leeds (UK)</p>
               <p class="duration">Jul 2018 – Jul 2019</p>
+              <ul>
+                <li>
+                  Developed a location-allocation model to optimise health
+                  service placement, enhancing service coverage
+                </li>
+                <li>
+                  Developed a novel population estimation model for small areas
+                  using large housing datasets and POI data.
+                </li>
+                <li>
+                  Managed 300K+ records of housing & POI data using R and custom
+                  scripts.
+                </li>
+                <li>
+                  Delivered results through spatial analysis and academic
+                  dissemination.
+                </li>
+                <li>
+                  Drafted and published research papers from the relevant
+                  research
+                </li>
+              </ul>
             </div>
 
             <div class="job">
               <h3>Ron Lister Visiting Fellow</h3>
               <p class="company">University of Otago (New Zealand)</p>
               <p class="duration">Jul 2017 – Oct 2017</p>
+              <ul>
+                <li>
+                  Delivered public and departmental lectures on urban
+                  development and spatial analytics.
+                </li>
+                <li>
+                  Participated in postgraduate teaching and departmental
+                  research activities.
+                </li>
+              </ul>
             </div>
 
             <div class="job">
@@ -105,6 +193,18 @@
                 Shandong University of Science and Technology (China)
               </p>
               <p class="duration">Sep 2015 – Jun 2018</p>
+              <ul>
+                <li>Delivered undergraduate and postgraduate courses.</li>
+                <li>
+                  Supervised student research and earned a university-level
+                  teaching award.
+                </li>
+                <li>
+                  Coached students to success in national-level academic
+                  competitions.
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div class="section-block education-section">
