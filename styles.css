@@ -573,9 +573,11 @@ footer {
     color: #333;
     font-size: 1rem;
     margin-bottom: 1.5rem;
-    display: inline-block;
+}
+
+.contact-intro span {
     white-space: nowrap;
-    width: auto;
+    display: inline-block;
 }
 
 .contact-details {
@@ -1109,4 +1111,10 @@ footer {
 .fab, .fas {
     display: inline-block;
     line-height: 1;
+}
+
+@media (max-width: 768px) {
+    .contact-intro span {
+        font-size: 0.9rem;
+    }
 }
