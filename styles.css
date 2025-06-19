@@ -912,7 +912,14 @@ footer {
 
 .contact-info h2 {
     color: #333;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.contact-intro {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
 }
 
 .contact-details {
@@ -925,10 +932,16 @@ footer {
     margin-bottom: 1rem;
 }
 
+.contact-item:last-child {
+    margin-bottom: 0;
+}
+
 .contact-item i {
     color: #333;
     margin-right: 1rem;
     font-size: 1.2rem;
+    width: 1.2rem;
+    text-align: center;
 }
 
 .contact-item p {
