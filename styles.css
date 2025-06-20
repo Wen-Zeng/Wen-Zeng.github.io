@@ -607,6 +607,17 @@ footer {
     margin: 0;
 }
 
+.contact-item a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-item a:hover {
+    color: #666;
+    text-decoration: underline;
+}
+
 .social-links {
     display: flex;
     gap: 1rem;
