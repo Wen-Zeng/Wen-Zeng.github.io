@@ -68,10 +68,116 @@
         margin-top: 8px;
       }
       .popup-content {
-        background: white;
-        padding: 10px;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 0;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+          0 4px 16px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        min-width: 200px;
+        max-width: 350px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        position: relative;
+        overflow: hidden;
+        animation: popupFadeIn 0.3s ease-out;
+      }
+
+      @keyframes popupFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .popup-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 16px;
+        font-weight: 600;
+        font-size: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .popup-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.2s;
+      }
+
+      .popup-close:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .popup-body {
+        padding: 16px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .popup-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .popup-item:last-child {
+        border-bottom: none;
+      }
+
+      .popup-label {
+        font-weight: 600;
+        color: #333;
+        flex: 0 0 40%;
+        text-transform: capitalize;
+      }
+
+      .popup-value {
+        color: #666;
+        flex: 0 0 60%;
+        text-align: right;
+        word-break: break-word;
+      }
+
+      .popup-arrow {
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+
+      .popup-empty {
+        text-align: center;
+        color: #999;
+        font-style: italic;
+        padding: 20px;
       }
       .ol-layerswitcher {
         top: 1em;
@@ -530,28 +636,125 @@
         }
       });
 
+      // Create enhanced popup
       const popupElement = document.createElement("div");
       popupElement.className = "popup-content";
       document.body.appendChild(popupElement);
+
       const popup = new ol.Overlay({
         element: popupElement,
         positioning: "bottom-center",
         stopEvent: false,
+        offset: [0, -10],
       });
       map.addOverlay(popup);
+
+      // Function to format property values
+      function formatPropertyValue(value) {
+        if (value === null || value === undefined) return "N/A";
+        if (typeof value === "number") {
+          return value.toLocaleString();
+        }
+        if (typeof value === "string") {
+          // Capitalize first letter and replace underscores with spaces
+          return (
+            value.charAt(0).toUpperCase() + value.slice(1).replace(/_/g, " ")
+          );
+        }
+        return value.toString();
+      }
+
+      // Function to get layer name for popup header
+      function getLayerName(feature) {
+        const layer = feature.get("layer") || "Feature";
+        return layer.replace(/([A-Z])/g, " $1").trim();
+      }
+
+      // Function to create popup content
+      function createPopupContent(feature) {
+        const props = feature.getProperties();
+        const layerName = getLayerName(feature);
+
+        let headerHtml = `
+          <div class="popup-header">
+            <span>${layerName}</span>
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+          </div>
+        `;
+
+        let bodyHtml = '<div class="popup-body">';
+        let hasProperties = false;
+
+        for (let key in props) {
+          if (
+            key !== "geometry" &&
+            key !== "layer" &&
+            props[key] !== null &&
+            props[key] !== undefined
+          ) {
+            hasProperties = true;
+            const formattedKey = key.replace(/([A-Z])/g, " $1").trim();
+            const formattedValue = formatPropertyValue(props[key]);
+            bodyHtml += `
+              <div class="popup-item">
+                <div class="popup-label">${formattedKey}</div>
+                <div class="popup-value">${formattedValue}</div>
+              </div>
+            `;
+          }
+        }
+
+        if (!hasProperties) {
+          bodyHtml +=
+            '<div class="popup-empty">No additional information available</div>';
+        }
+
+        bodyHtml += "</div>";
+        bodyHtml += '<div class="popup-arrow"></div>';
+
+        return headerHtml + bodyHtml;
+      }
+
+      // Function to close popup
+      window.closePopup = function () {
+        popup.setPosition(undefined);
+      };
+
+      // Enhanced click handler
       map.on("click", function (evt) {
         const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
         if (feature) {
-          const props = feature.getProperties();
-          let html = "";
-          for (let key in props) {
-            if (key !== "geometry") {
-              html += `<strong>${key}</strong>: ${props[key]}<br>`;
+          // Add layer information to feature
+          map.getLayers().forEach((layer) => {
+            if (layer instanceof ol.layer.Vector) {
+              const source = layer.getSource();
+              if (source && source.getFeatures().includes(feature)) {
+                feature.set("layer", layer.get("title") || "Feature");
+              }
+            } else if (layer instanceof ol.layer.Group) {
+              layer.getLayers().forEach((subLayer) => {
+                if (subLayer instanceof ol.layer.Vector) {
+                  const source = subLayer.getSource();
+                  if (source && source.getFeatures().includes(feature)) {
+                    feature.set("layer", subLayer.get("title") || "Feature");
+                  }
+                }
+              });
             }
-          }
-          popupElement.innerHTML = html;
+          });
+
+          const popupContent = createPopupContent(feature);
+          popupElement.innerHTML = popupContent;
           popup.setPosition(evt.coordinate);
         } else {
+          popup.setPosition(undefined);
+        }
+      });
+
+      // Close popup when clicking outside
+      map.on("click", function (evt) {
+        const feature = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+        if (!feature) {
           popup.setPosition(undefined);
         }
       });
