@@ -667,7 +667,11 @@
       // Function to get layer name for popup header
       function getLayerName(feature) {
         const layer = feature.get("layer") || "Feature";
-        return layer.replace(/([A-Z])/g, " $1").trim();
+        // Remove year information from the header
+        return layer
+          .replace(/\d{4}/g, "")
+          .replace(/([A-Z])/g, " $1")
+          .trim();
       }
 
       // Function to create popup content
@@ -692,15 +696,6 @@
             props[key] !== null &&
             props[key] !== undefined
           ) {
-            // Skip year-related properties
-            if (
-              key.toLowerCase().includes("year") ||
-              (typeof props[key] === "number" &&
-                props[key] >= 1990 &&
-                props[key] <= 2030)
-            ) {
-              continue;
-            }
             hasProperties = true;
             const formattedKey = key.replace(/([A-Z])/g, " $1").trim();
             const formattedValue = formatPropertyValue(props[key]);
