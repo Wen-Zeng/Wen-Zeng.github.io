@@ -653,7 +653,7 @@
       function formatPropertyValue(value) {
         if (value === null || value === undefined) return "N/A";
         if (typeof value === "number") {
-          return value.toLocaleString();
+          return value.toString();
         }
         if (typeof value === "string") {
           // Capitalize first letter and replace underscores with spaces
