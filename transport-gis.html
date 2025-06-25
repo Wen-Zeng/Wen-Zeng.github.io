@@ -692,6 +692,15 @@
             props[key] !== null &&
             props[key] !== undefined
           ) {
+            // Skip year-related properties
+            if (
+              key.toLowerCase().includes("year") ||
+              (typeof props[key] === "number" &&
+                props[key] >= 1990 &&
+                props[key] <= 2030)
+            ) {
+              continue;
+            }
             hasProperties = true;
             const formattedKey = key.replace(/([A-Z])/g, " $1").trim();
             const formattedValue = formatPropertyValue(props[key]);
