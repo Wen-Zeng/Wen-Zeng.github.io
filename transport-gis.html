@@ -78,7 +78,7 @@
         min-width: 200px;
         max-width: 350px;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        position: absolute;
+        position: relative;
         overflow: hidden;
         animation: popupFadeIn 0.3s ease-out;
         z-index: 1000;
@@ -672,50 +672,9 @@
 
       const popup = new ol.Overlay({
         element: popupElement,
-        positioning: function (extent, resolution) {
-          // Get the map size and popup size
-          const mapSize = map.getSize();
-          const popupSize = [
-            popupElement.offsetWidth || 300,
-            popupElement.offsetHeight || 200,
-          ];
-
-          // Get the click coordinate in pixel coordinates
-          const pixel = map.getPixelFromCoordinate(extent);
-
-          // Calculate the popup position to ensure it's fully visible
-          let popupX = pixel[0] - popupSize[0] / 2; // Center horizontally
-          let popupY = pixel[1] - popupSize[1] - 20; // Above the click point
-
-          // Adjust if popup would go off the top
-          if (popupY < 20) {
-            popupY = pixel[1] + 20; // Below the click point
-          }
-
-          // Adjust if popup would go off the left
-          if (popupX < 20) {
-            popupX = 20;
-          }
-
-          // Adjust if popup would go off the right
-          if (popupX + popupSize[0] > mapSize[0] - 20) {
-            popupX = mapSize[0] - popupSize[0] - 20;
-          }
-
-          // Convert back to map coordinates
-          const popupCoord = map.getCoordinateFromPixel([
-            popupX + popupSize[0] / 2,
-            popupY + popupSize[1] / 2,
-          ]);
-
-          // Set the popup position
-          popupElement.style.left = popupX + "px";
-          popupElement.style.top = popupY + "px";
-
-          return popupCoord;
-        },
+        positioning: "bottom-center",
         stopEvent: true,
-        offset: [0, 0],
+        offset: [0, 10],
       });
       map.addOverlay(popup);
 
@@ -816,6 +775,20 @@
               });
             }
           });
+
+          // Determine optimal popup positioning based on click location
+          const mapSize = map.getSize();
+          const popupHeight = 200; // Approximate popup height
+          const margin = 20;
+
+          // Check if popup would go off the top
+          if (evt.pixel[1] < popupHeight + margin) {
+            popup.setPositioning("top-center");
+            popup.setOffset([0, -10]);
+          } else {
+            popup.setPositioning("bottom-center");
+            popup.setOffset([0, 10]);
+          }
 
           const popupContent = createPopupContent(feature);
           popupElement.innerHTML = popupContent;
