@@ -200,6 +200,10 @@
         border-bottom: 8px solid white;
       }
 
+      .popup-arrow.center {
+        display: none;
+      }
+
       .popup-empty {
         text-align: center;
         color: #999;
@@ -671,24 +675,27 @@
           // Get the map size
           const mapSize = map.getSize();
           const popupSize = [
-            popupElement.offsetWidth,
-            popupElement.offsetHeight,
+            popupElement.offsetWidth || 300,
+            popupElement.offsetHeight || 200,
           ];
 
           // Get the click coordinate in pixel coordinates
           const pixel = map.getPixelFromCoordinate(extent);
 
-          // Calculate if popup would go off the top or bottom
+          // Calculate available space
           const topSpace = pixel[1];
           const bottomSpace = mapSize[1] - pixel[1];
 
-          // Determine positioning
-          if (topSpace < popupSize[1] + 20) {
-            // Not enough space on top, position below
+          // Determine positioning based on available space
+          if (topSpace >= popupSize[1] + 20) {
+            // Enough space above, position above the click point
+            return "bottom-center";
+          } else if (bottomSpace >= popupSize[1] + 20) {
+            // Enough space below, position below the click point
             return "top-center";
           } else {
-            // Enough space on top, position above
-            return "bottom-center";
+            // Not enough space in either direction, position in the center
+            return "center-center";
           }
         },
         stopEvent: true,
@@ -762,7 +769,7 @@
 
         bodyHtml += "</div>";
         bodyHtml += `<div class="popup-arrow ${
-          position === "top" ? "top" : ""
+          position === "top" ? "top" : position === "center" ? "center" : ""
         }"></div>`;
 
         return headerHtml + bodyHtml;
@@ -800,7 +807,16 @@
           const mapSize = map.getSize();
           const popupSize = [300, 200]; // Approximate popup size
           const topSpace = evt.pixel[1];
-          const position = topSpace < popupSize[1] + 20 ? "top" : "bottom";
+          const bottomSpace = mapSize[1] - evt.pixel[1];
+
+          let position = "bottom";
+          if (topSpace >= popupSize[1] + 20) {
+            position = "bottom";
+          } else if (bottomSpace >= popupSize[1] + 20) {
+            position = "top";
+          } else {
+            position = "center";
+          }
 
           const popupContent = createPopupContent(feature, position);
           popupElement.innerHTML = popupContent;
