@@ -672,46 +672,9 @@
 
       const popup = new ol.Overlay({
         element: popupElement,
-        positioning: function (extent, resolution) {
-          // Get the map size and popup size
-          const mapSize = map.getSize();
-          const popupSize = [
-            popupElement.offsetWidth || 300,
-            popupElement.offsetHeight || 200,
-          ];
-
-          // Get the click coordinate in pixel coordinates
-          const pixel = map.getPixelFromCoordinate(extent);
-
-          // Calculate the optimal popup position
-          let popupX = pixel[0] - popupSize[0] / 2; // Center horizontally
-          let popupY = pixel[1] - popupSize[1] - 20; // Above the click point
-
-          // Adjust if popup would go off the top
-          if (popupY < 20) {
-            popupY = pixel[1] + 20; // Below the click point
-          }
-
-          // Adjust if popup would go off the left
-          if (popupX < 20) {
-            popupX = 20;
-          }
-
-          // Adjust if popup would go off the right
-          if (popupX + popupSize[0] > mapSize[0] - 20) {
-            popupX = mapSize[0] - popupSize[0] - 20;
-          }
-
-          // Convert back to map coordinates
-          const popupCoord = map.getCoordinateFromPixel([
-            popupX + popupSize[0] / 2,
-            popupY + popupSize[1] / 2,
-          ]);
-
-          return popupCoord;
-        },
+        positioning: "bottom-center",
         stopEvent: true,
-        offset: [0, 0],
+        offset: [0, 10],
       });
       map.addOverlay(popup);
 
@@ -812,6 +775,43 @@
               });
             }
           });
+
+          // Determine optimal popup positioning based on click location
+          const mapSize = map.getSize();
+          const popupHeight = 200; // Approximate popup height
+          const popupWidth = 300; // Approximate popup width
+          const margin = 20;
+
+          let positioning = "bottom-center";
+          let offset = [0, 10];
+
+          // Check if popup would go off the top
+          if (evt.pixel[1] < popupHeight + margin) {
+            positioning = "top-center";
+            offset = [0, -10];
+          }
+
+          // Check if popup would go off the left or right sides
+          if (evt.pixel[0] < popupWidth / 2 + margin) {
+            // Near left edge, adjust horizontal positioning
+            if (positioning === "top-center") {
+              positioning = "top-left";
+            } else {
+              positioning = "bottom-left";
+            }
+            offset[0] = 10;
+          } else if (evt.pixel[0] > mapSize[0] - popupWidth / 2 - margin) {
+            // Near right edge, adjust horizontal positioning
+            if (positioning === "top-center") {
+              positioning = "top-right";
+            } else {
+              positioning = "bottom-right";
+            }
+            offset[0] = -10;
+          }
+
+          popup.setPositioning(positioning);
+          popup.setOffset(offset);
 
           const popupContent = createPopupContent(feature);
           popupElement.innerHTML = popupContent;
