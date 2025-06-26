@@ -193,6 +193,13 @@
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
       }
 
+      .popup-arrow.top {
+        bottom: auto;
+        top: -8px;
+        border-top: none;
+        border-bottom: 8px solid white;
+      }
+
       .popup-empty {
         text-align: center;
         color: #999;
@@ -660,9 +667,32 @@
 
       const popup = new ol.Overlay({
         element: popupElement,
-        positioning: "bottom-center",
+        positioning: function (extent, resolution) {
+          // Get the map size
+          const mapSize = map.getSize();
+          const popupSize = [
+            popupElement.offsetWidth,
+            popupElement.offsetHeight,
+          ];
+
+          // Get the click coordinate in pixel coordinates
+          const pixel = map.getPixelFromCoordinate(extent);
+
+          // Calculate if popup would go off the top or bottom
+          const topSpace = pixel[1];
+          const bottomSpace = mapSize[1] - pixel[1];
+
+          // Determine positioning
+          if (topSpace < popupSize[1] + 20) {
+            // Not enough space on top, position below
+            return "top-center";
+          } else {
+            // Enough space on top, position above
+            return "bottom-center";
+          }
+        },
         stopEvent: true,
-        offset: [0, -10],
+        offset: [0, 10],
       });
       map.addOverlay(popup);
 
@@ -692,7 +722,7 @@
       }
 
       // Function to create popup content
-      function createPopupContent(feature) {
+      function createPopupContent(feature, position = "bottom") {
         const props = feature.getProperties();
         const layerName = getLayerName(feature);
 
@@ -731,7 +761,9 @@
         }
 
         bodyHtml += "</div>";
-        bodyHtml += '<div class="popup-arrow"></div>';
+        bodyHtml += `<div class="popup-arrow ${
+          position === "top" ? "top" : ""
+        }"></div>`;
 
         return headerHtml + bodyHtml;
       }
@@ -764,7 +796,13 @@
             }
           });
 
-          const popupContent = createPopupContent(feature);
+          // Determine popup positioning
+          const mapSize = map.getSize();
+          const popupSize = [300, 200]; // Approximate popup size
+          const topSpace = evt.pixel[1];
+          const position = topSpace < popupSize[1] + 20 ? "top" : "bottom";
+
+          const popupContent = createPopupContent(feature, position);
           popupElement.innerHTML = popupContent;
           popup.setPosition(evt.coordinate);
         } else {
