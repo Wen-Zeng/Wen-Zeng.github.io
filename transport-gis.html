@@ -611,31 +611,6 @@
         }
       }, 100);
 
-      setTimeout(syncGroupVisibility, 200);
-
-      function syncGroupVisibility() {
-        map.getLayers().forEach((group) => {
-          if (group instanceof ol.layer.Group) {
-            const anyVisible = group
-              .getLayers()
-              .getArray()
-              .some((layer) => layer.getVisible());
-            group.setVisible(anyVisible);
-          }
-        });
-        layerSwitcher.renderPanel();
-      }
-
-      map.getLayers().forEach((group) => {
-        if (group instanceof ol.layer.Group) {
-          group.getLayers().forEach((layer) => {
-            layer.on("change:visible", () => {
-              syncGroupVisibility();
-            });
-          });
-        }
-      });
-
       // Create enhanced popup
       const popupElement = document.createElement("div");
       popupElement.className = "popup-content";
