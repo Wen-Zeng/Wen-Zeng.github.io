@@ -595,6 +595,20 @@
       });
       map.addControl(layerSwitcher);
 
+      // Add event listeners to automatically show groups when child layers are selected
+      map.getLayers().forEach((group) => {
+        if (group instanceof ol.layer.Group) {
+          group.getLayers().forEach((layer) => {
+            layer.on("change:visible", () => {
+              if (layer.getVisible()) {
+                // When a child layer becomes visible, make the group visible too
+                group.setVisible(true);
+              }
+            });
+          });
+        }
+      });
+
       // Add reset view functionality
       const resetButton = document.createElement("button");
       resetButton.className = "reset-button";
