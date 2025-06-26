@@ -331,6 +331,7 @@
       const highSpeedRailwayGroup = new ol.layer.Group({
         title: "High-Speed Railway",
         fold: "close",
+        visible: true,
         layers: [],
       });
       for (let year = 2003; year <= 2020; year++) {
@@ -352,6 +353,7 @@
       const motorwayGroup = new ol.layer.Group({
         title: "Motorway",
         fold: "close",
+        visible: false,
         layers: [
           new ol.layer.Vector({
             title: "1993",
@@ -381,6 +383,7 @@
       const regularRailwayGroup = new ol.layer.Group({
         title: "Regular Railway",
         fold: "close",
+        visible: false,
         layers: [
           new ol.layer.Vector({
             title: "1995",
@@ -410,6 +413,7 @@
       const railwayStationGroup = new ol.layer.Group({
         title: "Railway Station",
         fold: "close",
+        visible: false,
         layers: [],
       });
       for (let year = 1995; year <= 2020; year++) {
@@ -435,6 +439,7 @@
       const highSpeedRailwayStationGroup = new ol.layer.Group({
         title: "High-speed Railway Station",
         fold: "close",
+        visible: false,
         layers: [],
       });
       for (let year = 2003; year <= 2020; year++) {
@@ -460,6 +465,7 @@
       const regularRailwayStationGroup = new ol.layer.Group({
         title: "Regular Railway Station",
         fold: "close",
+        visible: false,
         layers: [],
       });
       for (let year = 1995; year <= 2020; year++) {
@@ -485,6 +491,7 @@
       const railwayImprovedGroup = new ol.layer.Group({
         title: "Railway Improved",
         fold: "close",
+        visible: false,
         layers: [],
       });
 
@@ -531,6 +538,7 @@
       const highwayGroup = new ol.layer.Group({
         title: "Highway",
         fold: "close",
+        visible: false,
         layers: [
           new ol.layer.Vector({
             title: "1993",
