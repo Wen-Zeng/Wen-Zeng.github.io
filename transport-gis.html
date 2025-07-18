@@ -273,8 +273,8 @@
 
       .north-arrow {
         position: absolute;
-        top: 1em;
-        right: 1em;
+        bottom: 3em;
+        left: 1em;
         width: 40px;
         height: 40px;
         background: rgba(255, 255, 255, 0.9);
@@ -293,17 +293,17 @@
       }
 
       .north-arrow svg {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         fill: #333;
       }
 
       .north-arrow .north-text {
         position: absolute;
-        top: 50%;
+        top: 2px;
         left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 8px;
+        transform: translateX(-50%);
+        font-size: 10px;
         font-weight: bold;
         color: #333;
         text-align: center;
@@ -683,7 +683,9 @@
       northArrowElement.title = "North Arrow";
       northArrowElement.innerHTML = `
         <svg viewBox="0 0 24 24">
-          <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+          <path d="M12 2L8 10L12 8L16 10L12 2Z"/>
+          <path d="M12 8L12 22"/>
+          <path d="M8 18L12 22L16 18"/>
         </svg>
         <div class="north-text">N</div>
       `;
