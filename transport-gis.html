@@ -328,6 +328,47 @@
         background: rgba(255, 255, 255, 0.9) !important;
       }
 
+      /* Dark theme scale bar styling */
+      .ol-scale-line-dark {
+        background: rgba(0, 0, 0, 0.7) !important;
+        border-radius: 4px !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+        padding: 4px 8px !important;
+        margin: 8px !important;
+      }
+
+      .ol-scale-line-dark .ol-scale-line-inner {
+        border: 2px solid #ffffff !important;
+        border-top: none !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+        background: transparent !important;
+      }
+
+      .ol-scale-line-dark .ol-scale-line-inner::before,
+      .ol-scale-line-dark .ol-scale-line-inner::after {
+        background: rgba(0, 0, 0, 0.8) !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        font-size: 11px !important;
+        padding: 2px 4px !important;
+        border-radius: 2px !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+      }
+
+      .ol-scale-line-dark .ol-scale-line-inner span {
+        background: rgba(0, 0, 0, 0.8) !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+        font-size: 11px !important;
+        padding: 2px 4px !important;
+        border-radius: 2px !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        display: inline-block !important;
+      }
+
       .north-arrow {
         position: absolute;
         bottom: 3em;
@@ -731,6 +772,7 @@
         steps: 4,
         text: true,
         minWidth: 140,
+        className: "ol-scale-line-dark",
       });
       map.addControl(scaleBar);
 
