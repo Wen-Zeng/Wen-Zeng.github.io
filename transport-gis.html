@@ -270,6 +270,45 @@
       .ol-attribution {
         display: none;
       }
+
+      .north-arrow {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .north-arrow:hover {
+        background: rgba(255, 255, 255, 1);
+      }
+
+      .north-arrow svg {
+        width: 24px;
+        height: 24px;
+        fill: #333;
+      }
+
+      .north-arrow .north-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 8px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        line-height: 1;
+      }
     </style>
   </head>
   <body>
@@ -296,7 +335,7 @@
           (1993–2020), national highways (1993, 2013–2020), and waterways.
         </p>
         <p>
-          The China Surface Transport System Database is freely accessible.
+          The China Land Surface Transport System Database is freely accessible.
           Users of the database should cite the following source:
         </p>
         <p>
@@ -627,6 +666,40 @@
         groupSelectStyle: "group",
       });
       map.addControl(layerSwitcher);
+
+      // Add scale bar
+      const scaleBar = new ol.control.ScaleLine({
+        units: "metric",
+        bar: true,
+        steps: 4,
+        text: true,
+        minWidth: 140,
+      });
+      map.addControl(scaleBar);
+
+      // Add north arrow
+      const northArrowElement = document.createElement("div");
+      northArrowElement.className = "north-arrow";
+      northArrowElement.title = "North Arrow";
+      northArrowElement.innerHTML = `
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+        </svg>
+        <div class="north-text">N</div>
+      `;
+
+      // Add click functionality to reset view to north
+      northArrowElement.addEventListener("click", function () {
+        const currentCenter = map.getView().getCenter();
+        const currentZoom = map.getView().getZoom();
+        map.getView().animate({
+          center: currentCenter,
+          rotation: 0,
+          duration: 1000,
+        });
+      });
+
+      map.getViewport().appendChild(northArrowElement);
 
       // Add event listeners to automatically show groups when child layers are selected
       map.getLayers().forEach((group) => {
