@@ -310,6 +310,24 @@
         display: inline-block !important;
       }
 
+      /* Target all text elements within scale bar */
+      .ol-scale-line * {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        font-weight: bold !important;
+      }
+
+      /* Target specific scale bar text */
+      .ol-scale-line .ol-scale-line-inner {
+        color: #ffffff !important;
+      }
+
+      /* Target any text nodes or elements */
+      .ol-scale-line-inner > * {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+      }
+
       .north-arrow {
         position: absolute;
         bottom: 3em;
@@ -715,6 +733,23 @@
         minWidth: 140,
       });
       map.addControl(scaleBar);
+
+      // Force white text color for scale bar
+      setTimeout(() => {
+        const scaleLine = document.querySelector(".ol-scale-line");
+        if (scaleLine) {
+          const textElements = scaleLine.querySelectorAll("*");
+          textElements.forEach((element) => {
+            if (element.textContent && element.textContent.trim() !== "") {
+              element.style.color = "#ffffff";
+              element.style.background = "rgba(255, 255, 255, 0.9)";
+              element.style.fontWeight = "bold";
+              element.style.padding = "2px 4px";
+              element.style.borderRadius = "2px";
+            }
+          });
+        }
+      }, 1000);
 
       // Add north arrow
       const northArrowElement = document.createElement("div");
