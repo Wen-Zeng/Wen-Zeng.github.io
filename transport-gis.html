@@ -724,32 +724,86 @@
       });
       map.addControl(layerSwitcher);
 
-      // Add scale bar
-      const scaleBar = new ol.control.ScaleLine({
-        units: "metric",
-        bar: true,
-        steps: 4,
-        text: true,
-        minWidth: 140,
-      });
-      map.addControl(scaleBar);
+      // Add custom scale bar with white text
+      const customScaleBar = document.createElement("div");
+      customScaleBar.className = "custom-scale-bar";
+      customScaleBar.style.cssText = `
+        position: absolute;
+        bottom: 1em;
+        left: 1em;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 4px 8px;
+        margin: 8px;
+        z-index: 1000;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        color: #ffffff;
+        border: 2px solid #333;
+        border-top: none;
+      `;
 
-      // Force white text color for scale bar
-      setTimeout(() => {
-        const scaleLine = document.querySelector(".ol-scale-line");
-        if (scaleLine) {
-          const textElements = scaleLine.querySelectorAll("*");
-          textElements.forEach((element) => {
-            if (element.textContent && element.textContent.trim() !== "") {
-              element.style.color = "#ffffff";
-              element.style.background = "rgba(255, 255, 255, 0.9)";
-              element.style.fontWeight = "bold";
-              element.style.padding = "2px 4px";
-              element.style.borderRadius = "2px";
-            }
-          });
+      function updateScaleBar() {
+        const view = map.getView();
+        const resolution = view.getResolution();
+        const units = view.getProjection().getUnits();
+
+        let scale;
+        if (units === "degrees") {
+          scale = 360 / resolution;
+        } else {
+          scale = 1 / resolution;
         }
-      }, 1000);
+
+        let scaleText;
+        if (scale >= 1000000) {
+          scaleText = Math.round(scale / 1000000) + "M";
+        } else if (scale >= 1000) {
+          scaleText = Math.round(scale / 1000) + "K";
+        } else {
+          scaleText = Math.round(scale);
+        }
+
+        const barWidth = 140;
+        const barHeight = 8;
+
+        customScaleBar.innerHTML = `
+          <div style="color: #ffffff; margin-bottom: 4px; text-align: center;">1:${scaleText}</div>
+          <div style="width: ${barWidth}px; height: ${barHeight}px; background: linear-gradient(to right, #333 0%, #333 50%, #fff 50%, #fff 100%); border: 1px solid #333;"></div>
+          <div style="color: #ffffff; margin-top: 4px; text-align: center; font-size: 10px;">${getDistanceText(
+            resolution,
+            units
+          )}</div>
+        `;
+      }
+
+      function getDistanceText(resolution, units) {
+        const barWidth = 140;
+        const distance = resolution * barWidth;
+
+        if (units === "degrees") {
+          const km = distance * 111;
+          if (km >= 1000) {
+            return Math.round(km / 1000) + " km";
+          } else {
+            return Math.round(km) + " km";
+          }
+        } else {
+          if (distance >= 1000) {
+            return Math.round(distance / 1000) + " km";
+          } else {
+            return Math.round(distance) + " m";
+          }
+        }
+      }
+
+      map.getViewport().appendChild(customScaleBar);
+      updateScaleBar();
+
+      // Update scale bar when map view changes
+      map.getView().on("change:resolution", updateScaleBar);
 
       // Add north arrow
       const northArrowElement = document.createElement("div");
