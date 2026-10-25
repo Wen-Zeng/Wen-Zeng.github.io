@@ -21,9 +21,27 @@
         height: 100%;
         font-family: Arial, sans-serif;
       }
+      body {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+      }
+      nav {
+        flex: 0 0 auto;
+      }
+      main {
+        display: grid;
+        grid-template-columns: clamp(320px, 28vw, 420px) minmax(0, 1fr);
+        flex: 1 1 auto;
+        min-height: 0;
+      }
       #map {
         width: 100%;
-        height: 80vh;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
         position: relative;
       }
       nav ul {
@@ -32,6 +50,8 @@
         padding: 10px;
         background: #eee;
         display: flex;
+        flex-wrap: wrap;
+        row-gap: 8px;
       }
       nav ul li {
         margin-right: 20px;
@@ -41,9 +61,38 @@
         color: #333;
       }
       .map-description {
-        max-width: 95%;
-        margin: 10px auto;
-        padding: 0 10px;
+        box-sizing: border-box;
+        min-width: 0;
+        min-height: 0;
+        margin: 0;
+        padding: 18px 22px 24px;
+        overflow-y: auto;
+        overflow-wrap: anywhere;
+        border-right: 1px solid #ddd;
+        background: #fff;
+      }
+      @media (max-width: 760px) {
+        body {
+          height: auto;
+          min-height: 100vh;
+          min-height: 100dvh;
+          overflow: auto;
+        }
+        main {
+          display: block;
+          flex: none;
+        }
+        .map-description {
+          overflow-y: visible;
+          border-right: 0;
+          border-bottom: 1px solid #ddd;
+          padding: 14px 16px 18px;
+        }
+        #map {
+          height: 75vh;
+          height: 75dvh;
+          min-height: 400px;
+        }
       }
       .map-description h1 {
         font-size: 20px;
