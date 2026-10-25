@@ -466,8 +466,8 @@
       const map = new ol.Map({
         target: "map",
         view: new ol.View({
-          center: ol.proj.fromLonLat([104.1954, 35.8617]),
-          zoom: 4,
+          center: ol.proj.fromLonLat([108, 35]),
+          zoom: 4.7,
         }),
         layers: [
           new ol.layer.Tile({
@@ -500,7 +500,7 @@
         { name: "Harbin", coordinates: [126.6424, 45.7567] },
         { name: "Urumqi", coordinates: [87.6168, 43.8256] },
         { name: "Lhasa", coordinates: [91.1322, 29.6604] },
-        { name: "Haikou", coordinates: [110.1983, 20.0440] },
+        { name: "Haikou", coordinates: [110.1983, 20.0440], positioning: "top-center", offset: [0, 2] },
         { name: "Qingdao", coordinates: [120.3826, 36.0671] },
       ];
       const cityLabelElements = majorCities.map((city) => {
@@ -510,7 +510,7 @@
         map.addOverlay(new ol.Overlay({
           element: element,
           position: ol.proj.fromLonLat(city.coordinates),
-          positioning: "bottom-center",
+          positioning: city.positioning || "bottom-center",
           offset: city.offset || [0, -8],
           stopEvent: false,
           insertFirst: true,
@@ -846,8 +846,8 @@
       resetButton.innerHTML = '<span class="reset-icon"></span>';
       resetButton.addEventListener("click", function () {
         map.getView().animate({
-          center: ol.proj.fromLonLat([104.1954, 35.8617]),
-          zoom: 4,
+          center: ol.proj.fromLonLat([108, 35]),
+          zoom: 4.7,
           duration: 1000,
         });
       });
