@@ -350,17 +350,6 @@
         pointer-events: none;
         user-select: none;
       }
-      .major-city-label::before {
-        content: "";
-        display: inline-block;
-        width: 4px;
-        height: 4px;
-        margin-right: 5px;
-        vertical-align: 2px;
-        background: #fff;
-        border: 1px solid #111;
-        border-radius: 50%;
-      }
 
       .north-arrow {
         position: absolute;
@@ -510,6 +499,9 @@
         { name: "Kunming", coordinates: [102.8329, 24.8801] },
         { name: "Harbin", coordinates: [126.6424, 45.7567] },
         { name: "Urumqi", coordinates: [87.6168, 43.8256] },
+        { name: "Lhasa", coordinates: [91.1322, 29.6604] },
+        { name: "Haikou", coordinates: [110.1983, 20.0440] },
+        { name: "Qingdao", coordinates: [120.3826, 36.0671] },
       ];
       const cityLabelElements = majorCities.map((city) => {
         const element = document.createElement("div");
@@ -805,7 +797,7 @@
       const scaleBar = new ol.control.ScaleLine({
         units: "metric",
         bar: false,
-        minWidth: 140,
+        minWidth: 70,
       });
       map.addControl(scaleBar);
 
