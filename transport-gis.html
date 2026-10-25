@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Transport GIS - Wen Zeng</title>
     <link
       rel="stylesheet"
@@ -267,8 +268,9 @@
         top: 4em;
         left: 0.5em;
       }
-      .ol-attribution {
-        display: none;
+      /* Keep the dark filter confined to the basemap canvas. */
+      .dark-basemap canvas {
+        filter: grayscale(1) invert(1) brightness(0.7) contrast(0.9);
       }
 
       .ol-scale-line {
@@ -445,10 +447,12 @@
         }),
         layers: [
           new ol.layer.Tile({
-            source: new ol.source.XYZ({
-              url: "https://{a-d}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-              attributions:
-                '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+            className: "dark-basemap",
+            // Normal interactive viewing only; honour the OSM tile usage policy.
+            // https://operations.osmfoundation.org/policies/tiles/
+            source: new ol.source.OSM({
+              url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              attributionsCollapsible: false,
             }),
             title: "Base Map",
             type: "base",
