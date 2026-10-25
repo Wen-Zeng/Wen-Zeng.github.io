@@ -333,14 +333,26 @@
       #map .ol-scale-line-inner {
         margin: 0;
         padding: 0 4px 3px;
-        border: 2px solid #fff;
-        border-top: 0;
+        position: relative;
+        border: 0;
+        border-bottom: 2px solid #fff;
         color: #fff;
         background: transparent;
         font: 600 13px/1.4 Arial, sans-serif;
         text-align: center;
         text-shadow: none;
       }
+      #map .ol-scale-line-inner::before,
+      #map .ol-scale-line-inner::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 2px;
+        height: 6px;
+        background: #fff;
+      }
+      #map .ol-scale-line-inner::before { left: 0; }
+      #map .ol-scale-line-inner::after { right: 0; }
       .major-city-label {
         color: #f5f7fa;
         font: 600 13px/1.3 Arial, sans-serif;
