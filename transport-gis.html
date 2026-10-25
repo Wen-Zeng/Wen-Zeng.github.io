@@ -466,7 +466,7 @@
       const map = new ol.Map({
         target: "map",
         view: new ol.View({
-          center: ol.proj.fromLonLat([108, 35]),
+          center: ol.proj.fromLonLat([112, 38]),
           zoom: 4.7,
         }),
         layers: [
@@ -846,7 +846,7 @@
       resetButton.innerHTML = '<span class="reset-icon"></span>';
       resetButton.addEventListener("click", function () {
         map.getView().animate({
-          center: ol.proj.fromLonLat([108, 35]),
+          center: ol.proj.fromLonLat([112, 38]),
           zoom: 4.7,
           duration: 1000,
         });
