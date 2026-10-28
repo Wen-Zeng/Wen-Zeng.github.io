@@ -3,8 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Research projects by Wen Zeng, including an open-access GIS database of China’s surface transport network." />
     <title>Projects - Wen Zeng</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      main { margin: 30px auto 0; }
+      a:focus-visible { outline: 3px solid #216aa4; outline-offset: 4px; }
+      .eyebrow { color: #526678; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 24px; }
+      .button-link { display: inline-block; padding: 10px 18px; border-radius: 5px; background: #173b55; color: #fff; text-decoration: none; font-weight: 600; }
+      .button-link:hover { background: #245574; }
+      .text-link { color: #174e78; font-weight: 600; text-underline-offset: 4px; }
+      @media (max-width: 768px) { h1 { font-size: 2rem; } main { margin-top: 24px; } }
+
+      .section-projects { max-width: 1200px; margin: auto; padding: 42px 24px 70px; min-height: calc(100vh - 220px); }
+      .page-intro { color: #666; max-width: 650px; margin-bottom: 30px; }
+      .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+      .project-card { padding: 28px; border: 1px solid #e2e7eb; box-shadow: 0 2px 8px rgba(0,0,0,.04); }
+      .project-card h2 { font-size: 1.5rem; line-height: 1.35; margin-bottom: 14px; }
+      .project-card p { margin-bottom: 16px; }
+      .project-card .recognition { margin: 22px 0 0; padding-top: 16px; border-top: 1px solid #e2e7eb; font-size: .9rem; color: #52616d; }
+      .project-card.upcoming { background: #fafbfc; box-shadow: none; }
+      .upcoming p { color: #666; }
+      @media (max-width: 700px) { .project-grid { grid-template-columns: 1fr; } .project-card { padding: 22px; } }
+    </style>
   </head>
   <body>
     <header>
@@ -27,30 +49,31 @@
         </div>
       </nav>
     </header>
-
     <main>
-      <section class="section-projects">
-        <h1>My Projects</h1>
+      <section class="section-projects" aria-labelledby="projects-title">
+        <h1 id="projects-title">My Projects</h1>
+        <p class="page-intro">Research datasets and tools for understanding transport infrastructure and socioeconomic development.</p>
         <div class="project-grid">
-          <div class="project-card">
-            <img src="project1.jpg" alt="Project 1" />
-            <h3>Project 1</h3>
-            <p>Description of your first project</p>
-            <a href="#" class="project-link">View Project</a>
-          </div>
-          <div class="project-card">
-            <img src="project2.jpg" alt="Project 2" />
-            <h3>Project 2</h3>
-            <p>Description of your second project</p>
-            <a href="#" class="project-link">View Project</a>
-          </div>
+          <article class="project-card">
+            <p class="eyebrow">Project 1 &middot; Research database</p>
+            <h2>China’s Surface Transport Network</h2>
+            <p>An open-access GIS database tracing the development of China’s national highways, motorways, conventional railways, high-speed railways and waterways from 1993 to 2020.</p>
+            <p>Developed with Steven J. Davis and Meijun Qian, the project supports research on transport access, network connectivity and socioeconomic development.</p>
+            <div class="actions">
+              <a href="transport-database.html" class="button-link">View Project</a>
+              <a href="transport-gis.html" class="text-link">Explore Interactive Map</a>
+            </div>
+            <p class="recognition">Data cited by the <a class="text-link" href="transport-database.html#media-coverage">Financial Times</a> in February 2026.</p>
+          </article>
+          <article class="project-card upcoming">
+            <p class="eyebrow">Project 2</p>
+            <h2>More Projects Coming Soon</h2>
+            <p>Additional research projects and resources will be added here.</p>
+          </article>
         </div>
       </section>
     </main>
-
-    <footer>
-      <p>&copy; 2025 Wen Zeng. All rights reserved.</p>
-    </footer>
+    <footer><p>&copy; 2026 Wen Zeng. All rights reserved.</p></footer>
     <script src="script.js"></script>
   </body>
 </html>
