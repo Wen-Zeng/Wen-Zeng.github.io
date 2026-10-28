@@ -401,6 +401,24 @@
         text-align: center;
         line-height: 1;
       }
+      .media-coverage {
+        margin-top: 22px;
+        padding-top: 16px;
+        border-top: 1px solid #ddd;
+      }
+      .media-coverage h2 {
+        margin: 0 0 10px;
+        font-size: 16px;
+        line-height: 1.3;
+        color: #333;
+      }
+      .media-coverage p { margin: 0 0 8px; }
+      .media-coverage time {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #666;
+      }
     </style>
   </head>
   <body>
@@ -461,6 +479,18 @@
           regular railway data includes only the years 1995 and 2020, while the
           motorway and highway data include only the years 1993 and 2020.
         </div>
+        <section class="media-coverage" id="media-coverage" aria-labelledby="media-coverage-title">
+          <h2 id="media-coverage-title">Media Coverage</h2>
+          <p>
+            Our transport dataset was cited as a data source in the
+            <strong>Financial Times</strong>:
+          </p>
+          <p>
+            <a href="https://www.ft.com/content/3c15be3c-bb91-49e9-8fb4-6388b948ad2d?syn-25a6b1a6=1"
+              target="_blank" rel="noopener">China’s high-speed rail network accelerates world’s largest human migration</a>
+            <time datetime="2026-02-17">17 February 2026</time>
+          </p>
+        </section>
       </div>
       <div id="map">
         <button class="reset-button" id="resetView" title="Reset View">
