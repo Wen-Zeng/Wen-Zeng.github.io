@@ -9,6 +9,37 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
+
+    <style>
+      /* Keep these layout changes local to the home page. */
+      body { padding-top: 0; }
+      header { position: sticky; top: 0; }
+      main { margin-top: 0; }
+      .section-home {
+        min-height: calc(100vh - var(--home-header-height, 78px));
+        min-height: calc(100svh - var(--home-header-height, 78px));
+        isolation: isolate;
+      }
+      .section-home::before { display: none; }
+      .section-home::after {
+        content: ""; position: absolute; inset: 0; z-index: 1;
+        background: radial-gradient(ellipse at center, rgba(245,247,250,.82), rgba(245,247,250,.3) 52%, transparent 82%);
+        pointer-events: none;
+      }
+      #spatial-network { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+      .section-home .home-content { z-index: 2; }
+      .network-toggle {
+        position: absolute; right: 18px; bottom: 16px; z-index: 3;
+        padding: 7px 12px; border: 1px solid #a8b8c6; border-radius: 5px;
+        background: rgba(248,250,252,.85); color: #3e5569; font: 12px Arial,sans-serif; cursor: pointer;
+      }
+      .network-toggle:hover { background: #fff; }
+      .network-toggle:focus-visible { outline: 2px solid #174e78; outline-offset: 3px; }
+      @media (prefers-reduced-motion: reduce) {
+        .section-home .home-content { animation: none; }
+        .section-home h1 { animation: none; }
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -34,6 +65,8 @@
 
     <main>
       <section class="section-home">
+        <canvas id="spatial-network" aria-hidden="true"></canvas>
+        <button class="network-toggle" type="button" aria-pressed="false">Pause background</button>
         <div class="home-content">
           <h1>Welcome! I'm Wen ZENG</h1>
           <h2 class="subtitle">
@@ -103,5 +136,81 @@
       </div>
     </footer>
     <script src="script.js"></script>
+
+    <script>
+      (() => {
+        const hero = document.querySelector('.section-home');
+        const canvas = document.getElementById('spatial-network');
+        const toggle = document.querySelector('.network-toggle');
+        const header = document.querySelector('header');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { toggle.hidden = true; return; }
+        const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let width = 0, height = 0, nodes = [], frame = 0, last = 0;
+        let paused = motion.matches;
+        function updateButton() {
+          toggle.textContent = paused ? 'Play background' : 'Pause background';
+          toggle.setAttribute('aria-pressed', String(paused));
+        }
+        function resize() {
+          document.documentElement.style.setProperty('--home-header-height', header.getBoundingClientRect().height + 'px');
+          const bounds = hero.getBoundingClientRect();
+          width = bounds.width; height = bounds.height;
+          const ratio = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          const count = Math.max(24, Math.min(85, Math.round(width * height / 17000)));
+          nodes = Array.from({length: count}, () => ({
+            x: Math.random() * width, y: Math.random() * height,
+            vx: (Math.random() - .5) * 9, vy: (Math.random() - .5) * 9,
+            radius: 1.5 + Math.random() * 1.4
+          }));
+          draw(0);
+        }
+        function draw(seconds) {
+          ctx.clearRect(0, 0, width, height);
+          const reach = Math.min(195, width * .3);
+          for (const n of nodes) {
+            n.x += n.vx * seconds; n.y += n.vy * seconds;
+            if (n.x < 0 || n.x > width) { n.x = Math.max(0, Math.min(width, n.x)); n.vx *= -1; }
+            if (n.y < 0 || n.y > height) { n.y = Math.max(0, Math.min(height, n.y)); n.vy *= -1; }
+          }
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const a = nodes[i], b = nodes[j];
+              const distance = Math.hypot(a.x - b.x, a.y - b.y);
+              if (distance < reach) {
+                ctx.strokeStyle = 'rgba(58,101,137,' + (.28 * (1 - distance / reach)) + ')';
+                ctx.lineWidth = .85;
+                ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+              }
+            }
+          }
+          for (const n of nodes) {
+            ctx.fillStyle = 'rgba(48,95,133,.55)';
+            ctx.beginPath(); ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2); ctx.fill();
+          }
+        }
+        function tick(now) {
+          frame = 0;
+          if (paused || document.hidden) return;
+          if (!last) last = now;
+          const elapsed = now - last;
+          if (elapsed >= 1000 / 30) { draw(Math.min(elapsed / 1000, .06)); last = now; }
+          frame = requestAnimationFrame(tick);
+        }
+        function sync() {
+          if (frame) cancelAnimationFrame(frame);
+          frame = 0; last = 0;
+          if (!paused && !document.hidden) frame = requestAnimationFrame(tick);
+        }
+        toggle.addEventListener('click', () => { paused = !paused; updateButton(); sync(); });
+        motion.addEventListener('change', () => { paused = motion.matches; updateButton(); sync(); });
+        document.addEventListener('visibilitychange', sync);
+        const observer = new ResizeObserver(resize);
+        observer.observe(hero); observer.observe(header);
+        updateButton(); resize(); sync();
+      })();
+    </script>
   </body>
 </html>
