@@ -162,8 +162,8 @@
           const count = Math.max(24, Math.min(85, Math.round(width * height / 17000)));
           nodes = Array.from({length: count}, () => ({
             x: Math.random() * width, y: Math.random() * height,
-            vx: (Math.random() - .5) * 9, vy: (Math.random() - .5) * 9,
-            radius: 1.5 + Math.random() * 1.4
+            vx: (Math.random() - .5) * 18, vy: (Math.random() - .5) * 18,
+            radius: 2.3 + Math.random() * 1.7
           }));
           draw(0);
         }
@@ -181,7 +181,7 @@
               const distance = Math.hypot(a.x - b.x, a.y - b.y);
               if (distance < reach) {
                 ctx.strokeStyle = 'rgba(58,101,137,' + (.28 * (1 - distance / reach)) + ')';
-                ctx.lineWidth = .85;
+                ctx.lineWidth = 1.5;
                 ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
               }
             }
