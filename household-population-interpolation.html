@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A study with Alexis Comber developing and evaluating the Household Proportion method for population interpolation, with case studies in Leeds and Qingdao." />
+    <title>Using household counts as ancillary information for areal interpolation of population: Comparing formal and informal, online data sources - Wen Zeng</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      main { margin: 30px auto 0; }
+      a:focus-visible { outline: 3px solid #216aa4; outline-offset: 4px; }
+      .eyebrow { color: #526678; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 24px; }
+      .button-link { display: inline-block; padding: 10px 18px; border-radius: 5px; background: #173b55; color: #fff; text-decoration: none; font-weight: 600; }
+      .button-link:hover { background: #245574; }
+      .text-link { color: #174e78; font-weight: 600; text-underline-offset: 4px; }
+      @media (max-width: 768px) { h1 { font-size: 2rem; } main { margin-top: 24px; } }
+
+      .project-detail { max-width: 1040px; margin: auto; padding: 38px 24px 64px; }
+      .project-detail section { min-height: 0; padding: 30px 0; border-bottom: 1px solid #e2e7eb; scroll-margin-top: 100px; }
+      .project-detail section:last-child { border-bottom: 0; }
+      .project-detail .project-hero { padding-top: 24px; }
+      .back-link { color: #526678; font-size: .9rem; text-underline-offset: 4px; }
+      .project-detail h1 { max-width: 850px; line-height: 1.15; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 18px; }
+      .project-detail h2 { font-size: 1.5rem; margin: 0 0 16px; line-height: 1.35; }
+      .project-detail h3 { font-size: 1.05rem; margin-bottom: 8px; }
+      .project-detail p { margin-bottom: 14px; }
+      .project-detail .lead { max-width: 820px; font-size: 1.15rem; color: #495763; }
+      .authors { color: #526678; }
+      .facts { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 28px; border: 1px solid #e2e7eb; border-radius: 6px; background: #f7f9fb; }
+      .facts div { padding: 18px 20px; }
+      .facts dt { font-size: 1.3rem; font-weight: 700; color: #173b55; }
+      .facts dd { font-size: .9rem; color: #52616d; }
+      .highlights { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 32px; }
+      .highlights p { margin-bottom: 0; }
+      .source-note { color: #66717a; font-size: .85rem; margin-top: 20px; }
+      .resource-list { list-style: none; padding: 0; }
+      .resource-list li { margin-bottom: 14px; }
+      .resource-list a, .project-detail p a { color: #174e78; text-underline-offset: 3px; }
+      .resource-list span { display: block; color: #66717a; font-size: .9rem; }
+      .media-panel { padding: 22px; border-left: 3px solid #173b55; background: #f7f9fb; }
+      .media-panel time { color: #66717a; font-size: .9rem; }
+      .citation { padding: 20px; border: 1px solid #e2e7eb; border-radius: 5px; overflow-wrap: anywhere; }
+      @media (max-width: 650px) { .facts { grid-template-columns: 1fr; } .facts div + div { border-top: 1px solid #e2e7eb; } .highlights { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <a href="index.html">Wen ZENG</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="transport-gis.html">Transport GIS</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <article class="project-detail">
+        <a href="projects.html" class="back-link">&larr; All Projects</a>
+        <section class="project-hero" aria-labelledby="project-title">
+          <p class="eyebrow">Project 6 &middot; Journal article</p>
+          <h1 id="project-title">Using household counts as ancillary information for areal interpolation of population: Comparing formal and informal, online data sources</h1>
+          <p class="lead">Using census household counts and online property data to improve estimates of population across geographic areas.</p>
+          <p class="authors">Wen Zeng · Alexis Comber</p>
+          <p><em>Computers, Environment and Urban Systems</em> &middot; 2020</p>
+          <div class="actions"><a href="https://doi.org/10.1016/j.compenvurbsys.2019.101440" class="button-link" target="_blank" rel="noopener">View Published Article</a></div>
+          <dl class="facts"><div><dt>Leeds &amp; Qingdao</dt><dd>Case studies in the UK and China</dd></div><div><dt>Household Proportion</dt><dd>Population interpolation method</dd></div><div><dt>2020</dt><dd>Volume 80, article 101440</dd></div></dl>
+        </section>
+        <section aria-labelledby="overview-title"><h2 id="overview-title">Research Overview</h2><p>Fine-scale population information is needed for planning and geographic analysis, but population statistics are often available only for larger areas or incompatible boundaries. This paper investigates whether household counts can help redistribute population from source zones to target zones more accurately.</p></section>
+        <section aria-labelledby="approach-title"><h2 id="approach-title">Data &amp; Approach</h2><p>The proposed Household Proportion (HP) method uses household counts as ancillary information for areal interpolation. The study compares formal census household data with informal residential property information from commercial websites, and evaluates the approach in Leeds, UK, and Qingdao, China. Fine-scale census observations in the Leeds case support validation.</p></section>
+        <section aria-labelledby="findings-title">
+          <h2 id="findings-title">Key Findings</h2>
+          <div class="highlights"><div><h3>Household data improve population estimates</h3><p>In the study’s comparisons, the HP method produces lower errors than the other interpolation approaches considered.</p></div>
+            <div><h3>Online property data offer useful information</h3><p>Residential property listings provide a potential alternative source of household-related information where detailed formal data are limited.</p></div>
+            <div><h3>Two contrasting urban contexts</h3><p>The Leeds and Qingdao case studies examine the use of these methods under different data availability and urban conditions.</p></div>
+            <div><h3>Coverage and representativeness remain important</h3><p>Online sources require careful assessment of their spatial coverage, representativeness and timing before they are used to estimate population.</p></div></div>
+        </section>
+        <section aria-labelledby="implications-title"><h2 id="implications-title">Research &amp; Policy Implications</h2><p>The work demonstrates an opportunity to incorporate freely accessible, geolocated data into population analysis. It provides a practical basis for finer-scale estimates while emphasizing that the quality and suitability of ancillary data must be examined for each setting.</p></section>
+        <section aria-labelledby="publication-title">
+          <h2 id="publication-title">Publication &amp; Contact</h2>
+          <p class="citation">Zeng, Wen, and Alexis Comber. 2020. “Using household counts as ancillary information for areal interpolation of population: Comparing formal and informal, online data sources.” Computers, Environment and Urban Systems 80: 101440. <a href="https://doi.org/10.1016/j.compenvurbsys.2019.101440" target="_blank" rel="noopener">10.1016/j.compenvurbsys.2019.101440</a>.</p>
+          <p class="source-note">Published in Computers, Environment and Urban Systems, volume 80 (2020), article 101440; accepted in November 2019.</p>
+          <p>Questions about this research? Contact <a href="mailto:wen.zeng.001@gmail.com">Wen Zeng</a>.</p>
+        </section>
+      </article>
+    </main>
+    <footer><p>&copy; 2026 Wen Zeng. All rights reserved.</p></footer>
+    <script src="script.js"></script>
+  </body>
+</html>
