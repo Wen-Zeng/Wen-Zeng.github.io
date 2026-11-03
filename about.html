@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About - Wen ZENG</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .about-profile {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 220px);
+        align-items: center;
+        gap: 24px;
+      }
+      .about-profile .contact-info {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .about-portrait {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+      }
+      @media (max-width: 650px) {
+        .about-profile { grid-template-columns: minmax(0, 1fr); }
+        .about-portrait {
+          grid-row: 1;
+          width: min(100%, 180px);
+          justify-self: center;
+        }
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -33,21 +60,25 @@
         <div class="about-container">
           <div class="about-header">
             <h1>About Me</h1>
-            <div class="contact-info">
-              <div class="contact-items-container">
-                <div class="contact-item">
-                  <i class="fas fa-user"></i>
-                  <p><strong>Name: </strong>Wen ZENG</p>
-                </div>
-                <div class="contact-item">
-                  <i class="fas fa-envelope"></i>
-                  <p><strong>Email: </strong>Wen.Zeng.001@gmail.com</p>
-                </div>
-                <div class="contact-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <p><strong>Location: </strong>Canberra, Australia</p>
+            <div class="about-profile">
+              <div class="contact-info">
+                <div class="contact-items-container">
+                  <div class="contact-item">
+                    <i class="fas fa-user"></i>
+                    <p><strong>Name: </strong>Wen ZENG</p>
+                  </div>
+                  <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <p><strong>Email: </strong>Wen.Zeng.001@gmail.com</p>
+                  </div>
+                  <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p><strong>Location: </strong>Canberra, Australia</p>
+                  </div>
                 </div>
               </div>
+              <img class="about-portrait" src="wen-zeng-profile.jpg" width="400" height="400"
+                   alt="Wen Zeng standing in front of snow-covered mountains" />
             </div>
           </div>
 
@@ -78,7 +109,7 @@
             </div>
 
             <div class="job">
-              <h3>Data and Policy Analyst</h3>
+              <h3>Research and Policy Analyst</h3>
               <p class="company">Skills Canberra, ACT Government</p>
               <p class="duration">Nov 2023 – Aug 2025</p>
             </div>
